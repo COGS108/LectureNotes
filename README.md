@@ -1,6 +1,6 @@
-[![Deploy Jekyll site to Pages](https://github.com/kshannon-ucsd/dsc40a/actions/workflows/jekyll.yml/badge.svg)](https://github.com/kshannon-ucsd/dsc40a/actions/workflows/jekyll.yml)
+[![Deploy Jekyll site to Pages](https://github.com/COGS108/LectureNotes/actions/workflows/jekyll.yml/badge.svg)](https://github.com/COGS108/LectureNotes/actions/workflows/jekyll.yml)
 
-# DSC40a
+# COGS 108
 Class Website for UCSD's Data Science in Practice
 
 
@@ -29,21 +29,21 @@ Class Website for UCSD's Data Science in Practice
 ### Building for Local
 All dev builds will be built into a `dev-docs/` dir. This dir is included in `.gitignore` and is only used for development builds. Any specific dev config should bd included in the `_config_dev.yml` file. Your absolute path to `dev-docs` will be different.
 1. `bundle exec jekyll serve --config _config.yml,_config_dev.yml --destination ./dev-docs` #builds and starts local server on localhost
-2. navigate to http://localhost:4000/dsc40a/
+2. navigate to http://localhost:4000/cogs108/
 
 ### Building for Prod
 1. A merge or direct push to main branch will automatically trigger the jekyll workflow which will build and deploy the main branch to production.
 2. Check status in github actions for build results.
-3. Navigate to https://kshannon-ucsd.github.io/dsc40a/
-4. 4. if building with HDSI's domain dsc40a.com add the `CNAME` file with the url entry `dsc40a.com` into the root
+3. Navigate to https://COGS108.github.io/LectureNotes/
+4. If using a custom domain, add the `CNAME` file with the domain into the root
 
 ### /data/ directory
 This dir is excluded from the jekyll build chain (excluded in the config.yaml file).
-Set this up correctly fopr the next iteration:
+Set this up correctly for the next iteration:
 `Change this to choose where to pick data from`
 `data_folder: su24` becomes e.g. wi25
 
-This folder includes data that changes from quarter to quarter, e.g. course calender. I don't want to recreate these data, so I dump them here to use for later. Eventually I would like to create variables to pull this data, but for now this is a fine solution.
+This folder includes data that changes from quarter to quarter, e.g. course calendar. This allows reuse without recreating data each term. Eventually this can be abstracted into variables.
 
 ## Course Calendar
 The following tags can be applied within a row for each course activity, set within the `_data/term/course_calendar.csv` file.
@@ -55,5 +55,4 @@ The following tags can be applied within a row for each course activity, set wit
   - GRPW --> groupwork
   - PRAC --> practice problems
 
- Any other tag used will default to a black colored tag
-
+Any other tag used will default to a black colored tag
