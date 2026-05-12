@@ -7,7 +7,7 @@
         - label: LEC
           type: lecture
           title: Welcome!
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/00-Welcome.pdf
+          slides: https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/00-Welcome.pdf
 
     - date: "2026-04-01"
       in_class: true
@@ -15,7 +15,7 @@
         - label: LEC
           type: lecture
           title: Version Control I
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/01-VersionControl.pdf
+          slides: https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/01-VersionControl.pdf
         - label: DISC
           type: disc
           title: Python review (nothing to turn in)
@@ -26,7 +26,7 @@
         - label: LEC
           type: lecture
           title: Version Control II
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/02-MoreVersionControl.pdf
+          slides: https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/02-MoreVersionControl.pdf
         - label: DISC
           type: disc
           title: Python review (nothing to turn in)
@@ -40,7 +40,7 @@
         - label: LEC
           type: lecture
           title: Data & Intuition I
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/03-Data.pdf
+          slides: https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/03-Data.pdf
 
     - date: "2026-04-08"
       in_class: true
@@ -48,7 +48,7 @@
         - label: LEC
           type: lecture
           title: Data & Intuition II
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/04-Intuition.pdf
+          slides: https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/04-Intuition.pdf
         - label: DUE
           type: hw
           title: "<b>Practice assignment due</b>"
@@ -65,7 +65,7 @@
         - label: LEC
           type: lecture
           title: Data Wrangling
-          slides: /assets/notebookLectures/05-Pandas.html
+          slides: https://nbviewer.org/url/raw.githubusercontent.com/COGS108/Lectures-Sp26/main/05-Pandas.ipynb
         - label: DUE
           type: hw
           title: "<b>D1 due</b>"
@@ -82,7 +82,7 @@
         - label: LEC
           type: lecture
           title: Ethics
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/06-Ethics.pdf
+          slides: https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/06-Ethics.pdf
 
     - date: "2026-04-15"
       in_class: true
@@ -90,7 +90,7 @@
         - label: LEC
           type: lecture
           title: Data Science questions
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/07-Questions.pdf
+          slides: https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/07-Questions.pdf
         - label: DUE
           type: hw
           title: "<b>GitHub ID due</b>"
@@ -107,7 +107,7 @@
         - label: LEC
           type: lecture
           title: Data viz principles
-          slides: /assets/notebookLectures/08-Datavis.html
+          slides: https://nbviewer.org/url/raw.githubusercontent.com/COGS108/Lectures-Sp26/main/08-Datavis.ipynb
         - label: DUE
           type: hw
           title: "<b>D2 due</b>"
@@ -124,7 +124,7 @@
         - label: LEC
           type: lecture
           title: Exploratory Data Analysis
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/09-Analysis.pdf
+          slides: https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/09-Analysis.pdf
 
     - date: "2026-04-22"
       in_class: true
@@ -132,7 +132,7 @@
         - label: LEC
           type: lecture
           title: Geospatial
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/10-EDA.pdf
+          slides: https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/10-EDA.pdf
         - label: DUE
           type: hw
           title: "<b>A1 due</b>"
@@ -149,7 +149,7 @@
         - label: LEC
           type: lecture
           title: Inference I
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/11-Inference1.pdf
+          slides: https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/11-Inference1.pdf
         - label: DUE
           type: hw
           title: "<b>D3 due</b>"
@@ -166,7 +166,7 @@
         - label: LEC
           type: lecture
           title: Inference II
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/12-Inference2.pdf
+          slides: https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/12-Inference2.pdf
 
     - date: "2026-04-29"
       in_class: true
@@ -174,7 +174,7 @@
         - label: LEC
           type: lecture
           title: Non parametric inference
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/13-Nonparametric-Inference.pdf
+          slides: https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/13-Nonparametric-Inference.pdf
         - label: DUE
           type: hw
           title: "<b>Project Proposal due</b>"
@@ -188,7 +188,7 @@
         - label: LEC
           type: lecture
           title: Linear models I
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/14-Models.pdf
+          slides: https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/14-Models.pdf
         - label: DUE
           type: hw
           title: "<b>D4 due</b>"
@@ -205,7 +205,7 @@
         - label: LEC
           type: lecture
           title: Linear models II
-          slides: /assets/notebookLectures/15-Inference-and-models.html
+          slides: https://nbviewer.org/url/raw.githubusercontent.com/COGS108/Lectures-Sp26/main/15-Inference-and-models.ipynb
 
     - date: "2026-05-06"
       in_class: true
@@ -213,7 +213,7 @@
         - label: LEC
           type: lecture
           title: Dimensionality Reduction
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/16-Dimensionality-Reduction.pdf
+          slides: https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/16-Dimensionality-Reduction.pdf
         - label: DUE
           type: hw
           title: "<b>A2 due</b>"
@@ -227,7 +227,7 @@
         - label: LEC
           type: lecture
           title: Machine Learning I
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/17-Machine-Learning.pdf
+          slides: https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/17-Machine-Learning.pdf
         - label: DUE
           type: hw
           title: "<b>D5 due</b>"
@@ -244,7 +244,7 @@
         - label: LEC
           type: lecture
           title: Machine Learning II
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/18-Measuring-Machine-Learning.pdf
+          slides: https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/18-Measuring-Machine-Learning.pdf
 
     - date: "2026-05-13"
       in_class: true
