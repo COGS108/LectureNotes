@@ -73,6 +73,8 @@ When in doubt, refer to the lecture materials, course announcements, and officia
 - [Learn Git Branching](https://learngitbranching.js.org/?locale=en_US)
 - [Coursera Git Course](https://www.coursera.org/learn/introduction-git-github)
 - [Katas for Git](https://github.com/eficode-academy/git-katas)
+- [GitHub Pull Request Tutorial](https://github.com/skills/review-pull-requests)
+- [Github Merge Conflicts Tutorial](https://github.com/skills/resolve-merge-conflicts)
 
 ---
 
@@ -96,6 +98,7 @@ When in doubt, refer to the lecture materials, course announcements, and officia
 - [ML Cheat Sheets](https://startupsventurecapital.com/essential-cheat-sheets-for-machine-learning-and-deep-learning-researchers-efb6a8ebd2e5)
 - [Python for Data Analysis](http://bedford-computing.co.uk/learning/wp-content/uploads/2015/10/Python-for-Data-Analysis.pdf)
 - [Learning Pandas](https://tomaugspurger.github.io/modern-1-intro.html)
+- [Pandas Tutor](https://pandastutor.com/)
 
 ---
 
@@ -140,6 +143,11 @@ When in doubt, refer to the lecture materials, course announcements, and officia
 - [Scientific Writing Guide](https://www.nature.com/scitable/ebooks/english-communication-for-scientists-14053993/)
 
 ---
+## Demo Videos
+- [Conda Tutorial](https://www.youtube.com/watch?v=UEmstopAofc&list=PLaaNbhBDEsoGdYNDOUJRqoM_VF518avpe&index=1)
+- [Docker Tutorial](https://www.youtube.com/watch?v=6BD56OxI0-s&list=PLaaNbhBDEsoGdYNDOUJRqoM_VF518avpe&index=2)
+- [Creating SSH Keys for GitHub](https://www.youtube.com/watch?v=3nemnK7Z5vs&list=PLaaNbhBDEsoGdYNDOUJRqoM_VF518avpe&index=3)
+- [Basic Git/Github Operations](https://www.youtube.com/watch?v=JUcXf3YKm1I&list=PLaaNbhBDEsoGdYNDOUJRqoM_VF518avpe&index=4)
 
 ## Past Exams and Practice
 
