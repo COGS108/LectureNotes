@@ -1,4 +1,4 @@
-.week {
+.week { 
   @extend .card;
 
   .week-days {
@@ -78,6 +78,19 @@
   .week-event {
     grid-column-start: 2;
 
+    p {
+      display: inline-block;
+      width: auto;
+      margin-right: 0.75rem;
+    }
+
+    .pdf-read-button {
+      display: inline-block;
+      margin-top: 0.35rem;
+      margin-right: 0.5rem;
+      vertical-align: top;
+    }
+
     +.week-event {
       padding-top: 0;
     }
@@ -93,13 +106,31 @@
     // .label-vit { background-color: #c1443c; text-align: center; border-radius: 9px; }
     // .label-live { background-color: #63c082; text-align: center; border-radius: 9px; }
     // .label-ghost { background-color: #ffffff; width: 30px; text-align: center; border-radius: 9px; }
-
   }
+}
 
+.pdf-read-button {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid #5c5962;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  background-color: #f7f7f7;
+  color: #5c5962 !important;
+  vertical-align: middle;
+}
+
+.pdf-read-button:hover {
+  text-decoration: none;
+  background-color: #5c5962;
+  color: #ffffff !important;
 }
 
 ::after { content: "" !important }
 
 .text-grey-dk-100, .label-lecture {
-    color: #5c5962 !important;
+  color: #5c5962 !important;
 }
