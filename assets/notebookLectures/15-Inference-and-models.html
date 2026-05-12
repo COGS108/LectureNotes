@@ -1,0 +1,1140 @@
+---
+---
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>inference-and-models</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="15-Inference-and-models_files/libs/clipboard/clipboard.min.js"></script>
+<script src="15-Inference-and-models_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="15-Inference-and-models_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="15-Inference-and-models_files/libs/quarto-html/popper.min.js"></script>
+<script src="15-Inference-and-models_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="15-Inference-and-models_files/libs/quarto-html/anchor.min.js"></script>
+<link href="15-Inference-and-models_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="15-Inference-and-models_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="15-Inference-and-models_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="15-Inference-and-models_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="15-Inference-and-models_files/libs/bootstrap/bootstrap-efbb37e9afcc02144ebbc7afd12a776f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://colab.research.google.com/github/COGS108/Lectures-Sp26/blob/master/15-Inference-and-models.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid figure-img"></a></p>
+<figcaption>Open In Colab</figcaption>
+</figure>
+</div>
+<section id="inference" class="level2">
+<h2 class="anchored" data-anchor-id="inference">Inference</h2>
+<ul>
+<li>Association between variables: <strong>Pearson’s correlation coefficient</strong></li>
+<li>Models: <strong>Ordinary Linear Regression (OLS)</strong>
+<ul>
+<li><strong>simple linear regression</strong>
+<ul>
+<li>effect size</li>
+<li>p-value</li>
+<li>interpretation</li>
+</ul></li>
+<li><strong>multiple linear regression</strong>
+<ul>
+<li>confounding</li>
+</ul></li>
+<li>working with <strong>transformed data</strong></li>
+</ul></li>
+<li>Comparison of means: <strong>Student’s t test</strong></li>
+</ul>
+<p>To answer our quiz questions today please open this link in seperate browser tab or window:</p>
+<p>https://forms.gle/S3Nc6hgEfuKHrzH3A</p>
+<p>We will be going back and forth from the notebook to this quiz several times</p>
+<div id="e17717c6-8af6-4b46-8240-11304b4d9fe9" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Import seaborn and apply its plotting styles</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>sns.set_theme(style<span class="op">=</span><span class="st">"white"</span>, </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>              font_scale<span class="op">=</span><span class="dv">2</span>, </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>              rc<span class="op">=</span>{<span class="st">'axes.spines.right'</span>: <span class="va">False</span>,<span class="st">'axes.spines.top'</span>: <span class="va">False</span>}) <span class="co"># this last thing is equivalent to always having sns.despine()</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># import matplotlib</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib <span class="im">as</span> mpl</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># set plotting size parameter</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">'figure.figsize'</span>] <span class="op">=</span> (<span class="dv">8</span>, <span class="dv">8</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Statmodels &amp; patsy</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> patsy</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> pearsonr, norm, ttest_ind, skewnorm</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">#import warnings</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">#warnings.filterwarnings('ignore')</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">#improve resolution, probably not necessary anymore but a few years ago it was</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span><span class="st">'retina'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="correlation-pearson-correlation-r" class="level1">
+<h1>Correlation: Pearson correlation (<span class="math inline">\(r\)</span>)</h1>
+<ul>
+<li>Measures the strength of association between two variables</li>
+<li>Takes values [-1,1]</li>
+<li>Positive Correlation
+<ul>
+<li><span class="math inline">\(r\)</span> &gt; 0</li>
+<li>as <span class="math inline">\(r\)</span> approaches 1, x and y are highly correlated</li>
+<li><span class="math inline">\(r\)</span> approaching 1 can happen with a shallow sloped line of regression</li>
+<li><span class="math inline">\(r\)</span> approaching (not quite) 0 can happen with a steep sloped line of regression</li>
+</ul></li>
+<li>Negative Correlation
+<ul>
+<li><span class="math inline">\(r\)</span> &lt; 0</li>
+<li>as <span class="math inline">\(r\)</span> approaches -1, x and y are highly negatively correlated</li>
+<li><span class="math inline">\(r\)</span> approaching -1 can happen with a shallow sloped line of regression</li>
+<li><span class="math inline">\(r\)</span> approaching (not quite) 0 can happen with a steep sloped line of regression</li>
+</ul></li>
+<li>Zero Correlation
+<ul>
+<li><span class="math inline">\(r \approx 0\)</span></li>
+<li>as <span class="math inline">\(r\)</span> approaches 0, x and y are not correlated</li>
+<li>as <span class="math inline">\(r\)</span> approaches 0, the slope of the line of regression becomes 0 (horizontal)</li>
+</ul></li>
+</ul>
+<section id="no-correlation-example" class="level2">
+<h2 class="anchored" data-anchor-id="no-correlation-example">No Correlation example</h2>
+<div id="91c44897-f5ca-4601-89b2-7c060be15696" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">1</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># x and y are uncorrelated because they are independent draws of random numbers</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># the value of x does not depend on the corresponding value of y and vice versa</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.random.randint(<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">1000</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.random.randint(<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">1000</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>plt.scatter(x, y, s<span class="op">=</span><span class="dv">50</span>)<span class="op">;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'correlation coefficients:</span><span class="ch">\n</span><span class="st">'</span>, np.corrcoef(x, y))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="question" class="level3">
+<h3 class="anchored" data-anchor-id="question">Question</h3>
+<p>What would you expect Pearson correlation for the following relationship to be? Note that the value of y is a function of x plus some random noise added in</p>
+<div id="dcd9835e-1eb5-4073-b682-32a3bc4a45d0" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># setting a random seed makes this answer repeatable</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">888</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1000 random integers between 0 and 50</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.random.randint(<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">200</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> x <span class="op">+</span> np.random.normal(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">200</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>plt.scatter(x, y, s<span class="op">=</span><span class="dv">50</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><ol type="A">
+<li>-0.8</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>-0.4</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>0</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>0.4</li>
+</ol></li>
+<li><ol start="5" type="A">
+<li>0.8</li>
+</ol></li>
+</ul>
+<div id="5dc3868e-3fc1-4b20-bb21-1cfd9086d952" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now calculate it here!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="the-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-data">The Data</h2>
+<p>Here is some data we will use to explore inference. Both for regression models and t-tests.</p>
+<p>The rows show (for a particular point in time) values for US states</p>
+<p>The columns show - Percent of people with incomes low enough to be classed as living in poverty - Birth rates for mothers who are in different age bands - An overall teen birth rate (combining different age bands) - A rate of violent crimes committed</p>
+<div id="c04469d7-b287-4010-8854-744550d72b5d" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in file; specify that it is tab-separated file</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> ( pd.read_csv(<span class="st">'https://raw.githubusercontent.com/shanellis/datasets/master/index.txt'</span>, sep<span class="op">=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      .set_index(<span class="st">'Location'</span>) )</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>df.head(<span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="lets-look-at" class="level2">
+<h2 class="anchored" data-anchor-id="lets-look-at">Let’s look at</h2>
+<p>TeenBrth as a function of PovPct</p>
+</section>
+<section id="assumptions-of-linear-regression" class="level2">
+<h2 class="anchored" data-anchor-id="assumptions-of-linear-regression">Assumptions of Linear Regression</h2>
+<ol type="1">
+<li>Linear relationship</li>
+<li>No multicollinearity</li>
+<li>No auto-correlation</li>
+<li>Homoscedasticity</li>
+</ol>
+<p>Let’s check these assumptions in the data!</p>
+<p>There’s no multi colinearity becasue we are only exploring two variables. There’s no auto-correlation because there’s no time variable here</p>
+<p>NB: right here I’m suggesting you take and EDA style approach to the problem using <code>seaborn</code>. But you can also check for all of these issues with tools built into our regression package <code>statsmodels</code> https://www.statsmodels.org/stable/diagnostic.html</p>
+<div id="7c76fe19-fb15-4953-955a-bd1b335a6030" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use this cell to explore the data... time for EDA!</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we want to know if things meet the criteria for OLS regression</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Potential linear relationship or at least linear in parameters</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Multivariate normality or at least normal residuals</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. No multicolinearity (not applicable here; only one x variable)</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. No autocorrelation (not applicable here; no time series data)</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Homoskedasticity </span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># You should:</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Look at univariate histograms on your own; look for and remove any outliers that look problematic</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) then use sns.lmplot to look at potential relationships </span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) then use sns.residplot to look at normality</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="linear-regression" class="level2">
+<h2 class="anchored" data-anchor-id="linear-regression">Linear Regression</h2>
+<p><span class="math display">\[outcome = \beta_0 + \beta_1*predictor\]</span></p>
+<p>First, let’s be sure we’re on the same page about what our outcome is. Here, we’re intererested in whether <strong>Poverty Percentage (predictor)</strong> impacts <strong>Teen Birth Rate (outcome)</strong>.</p>
+<div id="71c4da4b-2cd1-46b9-961a-6f603df015f9" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import statsmodels.api as sm</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># import statsmodels.formula.api as smf</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># OLD SKOOL matrix way to do this</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># We can specify our model matrices using `pastsy`.</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>outcome, predictors <span class="op">=</span> patsy.dmatrices(<span class="st">'TeenBrth ~ PovPct'</span>, df)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> sm.OLS(outcome, predictors)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Its much nicer to use the MODERN formulae interface instead!</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># I suggest that you just always use this!</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'TeenBrth ~ PovPct'</span>, data<span class="op">=</span>df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="5331d257-bb71-433a-95e0-756a1bc4c172" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># examine the `model` object using tab complete to see all the things inside</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>And, then we just have to fit the model and look at the results.</p>
+<div id="5595c28c-629c-4da4-bbc5-276ebdda50e3" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">## fit the model</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> model.fit()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">## look at the results</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(results.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="question-1" class="level3">
+<h3 class="anchored" data-anchor-id="question-1">Question #1</h3>
+<p>What is the effect size of the relationship between Poverty Percentage and Teen Birth Rate?</p>
+<ul>
+<li><ol type="A">
+<li>15.67</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>2.03</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>4.032</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>0.495</li>
+</ol></li>
+</ul>
+<p>There is a lot of information in there. Let’s focus on the three pieces we discussed last lecture:</p>
+<ul>
+<li><code>coef</code> : <span class="math inline">\(\beta_1\)</span> estimate explaining the effect size</li>
+<li><code>std err</code> : standard error</li>
+<li><code>P&gt;|t|</code> : the p-value</li>
+</ul>
+</section>
+</section>
+<section id="interpretation" class="level2">
+<h2 class="anchored" data-anchor-id="interpretation">Interpretation</h2>
+<p><span class="math display">\[outcome = \beta_0 + \beta_1*predictor\]</span></p>
+<p><span class="math display">\[ Teen Birth = 15.67 + 2.03  * Poverty Percentage \]</span></p>
+<p>If the Poverty Percentage were 0, the Teen Birth Rate would be <strong>15.67</strong> (The Intercept, <span class="math inline">\(\beta_0\)</span>)</p>
+<p>For every 1 unit increase in Poverty Percentage, you expect to see a <strong>2.03</strong> unit increase in Teen Birth Rate (The effect size, <span class="math inline">\(\beta_1\)</span>)</p>
+<div id="e3bcac76-205b-44ce-94c3-3dec48b684bd" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">## look at the results</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(results.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="question-2" class="level3">
+<h3 class="anchored" data-anchor-id="question-2">Question #2</h3>
+<p>Which value represents the expected Teen Birth Rate if the Poverty Percentage were 0?</p>
+<ul>
+<li><ol type="A">
+<li>15.67</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>2.03</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>4.032</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>0.495</li>
+</ol></li>
+</ul>
+<div id="7bcf51d9-f9fc-4fa8-8bbb-5b169ed0453f" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the orginal data (as before)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span><span class="st">'PovPct'</span>, y<span class="op">=</span><span class="st">'TeenBrth'</span>, data<span class="op">=</span>df, s<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate and plot the model fit line</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>xs <span class="op">=</span> np.arange(df[<span class="st">'PovPct'</span>].<span class="bu">min</span>(), df[<span class="st">'PovPct'</span>].<span class="bu">max</span>())</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>ys <span class="op">=</span> results.params.iloc[<span class="dv">1</span>] <span class="op">*</span> xs <span class="op">+</span> results.params.iloc[<span class="dv">0</span>]</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>plt.plot(xs, ys, <span class="st">'--k'</span>, linewidth<span class="op">=</span><span class="dv">4</span>, label<span class="op">=</span><span class="st">'Model'</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># make the title tell us model parameters</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>vals<span class="op">=</span><span class="st">'$y=</span><span class="sc">{:.3f}</span><span class="st">x + </span><span class="sc">{:.3f}</span><span class="st">, p=</span><span class="sc">{:.3f}</span><span class="st">, r=</span><span class="sc">{:.3f}</span><span class="st">, r^2=</span><span class="sc">{:.3f}</span><span class="st">$'</span>.<span class="bu">format</span>(results.params.iloc[<span class="dv">1</span>], </span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>                                                                   results.params.iloc[<span class="dv">0</span>], </span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>                                                                   results.pvalues.iloc[<span class="dv">1</span>], </span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>                                                                   df[[<span class="st">'PovPct'</span>,<span class="st">'TeenBrth'</span>]].corr().iloc[<span class="dv">0</span>,<span class="dv">1</span>], </span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>                                                                   results.rsquared)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>plt.title(vals)<span class="op">;</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Poverty Percentage'</span>)</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Teen Birth Rate'</span>)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>plt.legend()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The model (the line) mathematically describes the relationship between the data points, but it doesn’t explain the relationship <em>perfectly</em>. (All models are wrong!)</p>
+<p>Note that this line of regression comes from minimizing the Residual Sum of Squares (RSS): - if you were to draw a perpendicular line from each point to the line and calculate that distance, that is the residual - The RSS is if you square that residual and then sum across all points - this line of regression is the slope/intercept that minimizes RSS. - the method of minimizing RSS is called Ordinary Lease Squares or OLS</p>
+</section>
+</section>
+<section id="estimates" class="level2">
+<h2 class="anchored" data-anchor-id="estimates">Estimates</h2>
+<p>If I told you a locations’ Poverty Percentage, what would you guess its Teen Birth Rate would be?</p>
+<section id="clicker-question-3" class="level3">
+<h3 class="anchored" data-anchor-id="clicker-question-3">Clicker Question #3</h3>
+<p>If I told you the Poverty Percentage of a state was 15, what would you estimate would be its Teen Birth Rate? - A) ~ 0 - B) ~ 30 - C) ~ 40 - D) ~ 50 - E) ~ 60</p>
+</section>
+<section id="clicker-question-4" class="level3">
+<h3 class="anchored" data-anchor-id="clicker-question-4">Clicker Question #4</h3>
+<p>Which of the following is a reasonable estimate (guess) for a state with a Poverty Percentage of 20?</p>
+<ul>
+<li><ol type="A">
+<li>55.99</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>56.27</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>56.5</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>A - C</li>
+</ol></li>
+<li><ol start="5" type="A">
+<li>None of the above</li>
+</ol></li>
+</ul>
+</section>
+<section id="clicker-question-5" class="level3">
+<h3 class="anchored" data-anchor-id="clicker-question-5">Clicker Question #5</h3>
+<p>What is our conclusion from this analysis? (Question: Does Poverty Percentage affect Teen Birth Rate?)</p>
+<ul>
+<li><ol type="A">
+<li>Reject the null; There is no relationship between Poverty Percentage and Teen Birth Rate</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>Reject the null; There is a relationship between Poverty Percentage and Teen Birth Rate</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>Fail to reject the null; There is no relationship between Poverty Percentage and Teen Birth Rate</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>Fail to reject the null; There is a relationship between Poverty Percentage and Teen Birth Rate</li>
+</ol></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="multiple-linear-regression" class="level1">
+<h1>Multiple Linear Regression</h1>
+<p>So far, we’ve only been looking at the relationship of one measure (Poverty Percentage) on Teen Birth.</p>
+<p><em>But</em>, Poverty Percentage is likely <em>not</em> the only thing that affects Teen Birth Rate.</p>
+<p>We could imagine that Violent Crime rates in a location may affect both Poverty Percentage and could possibly affect Teen Birth Rate. (A confounder!)</p>
+<p>This is where <strong>multiple linear regression</strong> is incredibly helpful. Multiple linear regression allows you to measure the effect of multiple predictors on an outcome.</p>
+<p>Let’s do some EDA first to see if our hypothesis (Violent Crime is related to Teen Birth) holds up in our data at all</p>
+<div id="1ff9e738-6ec3-42db-9aaf-8948c19ce211" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># relationship between predictors</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span><span class="st">'PovPct'</span>, y<span class="op">=</span><span class="st">'ViolCrime'</span>, data<span class="op">=</span>df, s<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Poverty Percentage'</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Violent Crime'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="outlier-handling" class="level3">
+<h3 class="anchored" data-anchor-id="outlier-handling">Outlier handling</h3>
+<p>Ugh! there’s some nasty outlier going on there…. if we remove it maybe we will be able to see some relationship but we can’t right now because that one huge violent crime location is messing up the plot</p>
+<div id="d3545744-d4e9-46bd-a3e7-b93b5dce42b2" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df[df[<span class="st">'ViolCrime'</span>] <span class="op">&gt;</span> <span class="dv">50</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="8d2e2fa6-68af-4db7-8e6b-53e98d2ad330" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># removing DC</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[df[<span class="st">'ViolCrime'</span>] <span class="op">&lt;</span> <span class="dv">50</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="48fa84bb-c7f7-40da-a84e-019325d1f87d" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># relationship between predictors</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># after removing outlier</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span><span class="st">'PovPct'</span>, y<span class="op">=</span><span class="st">'ViolCrime'</span>, data<span class="op">=</span>df, s<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Poverty Percentage'</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Violent Crime'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Yay, now we can see what looks like a potentially linear relationship between poverty and violent crime.</p>
+<p>But BEWARE! Removing an outlier WILL change the coefficients of the regression!</p>
+<p>We did it here because the outlier was so big it might destroy the linear relationship. But that’s a judgement call, there is no “right way” when it comes to outlier removal.</p>
+<p>Maybe if you’ve got time, you should rerun the analysis below WITHOUT removing DC… see what’s different :)</p>
+<section id="alternatively" class="level4">
+<h4 class="anchored" data-anchor-id="alternatively">Alternatively</h4>
+<p>Instead of removing outliers you could use things other than sum of squared errors as your optimization metric. These techniques generally fall under the nme of “robust regression” becuase they try to (mostly) ignore the outliers rather than removing them. Yes statsmodels can do robust regression. Yes you should study the math at some point instead of just using it. But this link will show you how simple it can be to use (even if you don’t understand the math). And more to the point, there’s a lovely diagram showing you the difference between OLS and robust lines of regression https://www.statsmodels.org/stable/examples/notebooks/generated/robust_models_0.html#Example-2:-linear-function-with-linear-truth</p>
+<div id="5950f9cc-9c72-42ba-bca2-f0b323218baa" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 1: poverty predicts teen birth rate</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'TeenBrth ~ PovPct'</span>, data<span class="op">=</span>df)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>respp <span class="op">=</span> mod.fit()</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(respp.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="3ea02797-5512-499c-83dd-98bf68cc9495" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 2: violent crime predicts teen birth rate</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'TeenBrth ~ ViolCrime'</span>, data<span class="op">=</span>df)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>resvc <span class="op">=</span> mod.fit()</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(resvc.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cb65a6e2-7dae-4c70-b6b2-9e5ece880788" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 3: the linear combination of poverty and violent crime </span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#          predicts teen birth rate</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'TeenBrth ~ PovPct + ViolCrime'</span>, data<span class="op">=</span>df)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>resppvc <span class="op">=</span> mod.fit()</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(resppvc.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="clicker-question-6" class="level3">
+<h3 class="anchored" data-anchor-id="clicker-question-6">Clicker Question #6</h3>
+<p>Which has a larger effect on Teen Birth Rate?</p>
+<ul>
+<li><ol type="A">
+<li>Poverty Percentage</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>Violent Crime</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>Effect is equal across all predictors</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>No predictors have an effect on outcome</li>
+</ol></li>
+</ul>
+<p><span class="math display">\[ Teen Birth = 15.3 + (1.19  * Poverty Percentage) + (1.63 * Violent Crime) \]</span></p>
+<p>If the Poverty Percntage <em>and</em> Violent Crime were both 0, the Teen Birth Rate would be <strong>15.3</strong> (The Intercept, aka <span class="math inline">\(\beta_0\)</span>)</p>
+<p>Holding Violent crime constant, for every 1 unit increase in Poverty Percentage, you expect to see a <strong>1.9</strong> unit increase in Teen Birth Rate (The effect size, <span class="math inline">\(\beta_1\)</span>)</p>
+<p>Holding Poverty Percentage constant, for every 1 unit increase in Violent crime, you’d expect to see a <strong>1.63</strong> unit increase in Teen Birth Rate (The effect size, <span class="math inline">\(\beta_2\)</span>)</p>
+</section>
+<section id="model-selection" class="level2">
+<h2 class="anchored" data-anchor-id="model-selection">Model selection</h2>
+<p>We’ve now seen 3 different models 1. TB ~ PP 2. TB ~ VC 3. TB ~ PP + VC</p>
+<p>Let’s review the different model fits… hopefully they contain a way to select which model best fits the data! (spoiler, they do)</p>
+<div id="bc32621e-2ca8-4d18-8d2a-60c62182b3cd" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(respp.summary())</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(resvc.summary())</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(resppvc.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Much of the right hand column (R-squared through BIC) of the summary table are methods of <em>in-sample</em> model selection.</p>
+<p>In-sample means that these are measures meant to be used when you are evaluating how good a model is using the same data you are using to fit the model. In-sample stands in contrast to out-of-sample methods you might have heard of like cross-validation (which uses different subsets of the data to fit a model than it does when selecting which model to use)</p>
+<p>Lets start with R-squared. R-squared is a <strong>goodness-of-fit</strong> measure for linear regression models. This statistic indicates the percentage of the variance in the dependent variable that the independent variables explain collectively. We already know that Pearson’s r having a value close to +1/-1 means the datapoints lie basically on a straight line. When <span class="math inline">\(r=1\)</span>the dots fall perfectly on the line, and knowing X uniquely determines Y… there is no noise. When r is closer to zero noise is most of what we are seeing and knowing X doesn’t tell us much about the corresponding Y value. R-squared is literally Pearson’s r, squared. So it has the same properties plus it can be literally interpreted as “percent of the variance of Y which is explained by knowing X”, AKA “percent variance explained”. Models with high variance explained are models that fit their data well.</p>
+<p>But selecting a model is MORE than just “did it fit the data well”.</p>
+<p>To do in-sample model selection you want ignore R-squared and instead look at ANY of the following metrics - Adj. R-squared - AIC - BIC</p>
+<p>Going into the math details of these different measures here is beyond the scope of this notebook. For a full treatment I suggest Chapter 6 of the free textbook https://www.statlearning.com. For a quick intro I found these slides useful https://pages.stat.wisc.edu/~ane/st572/notes/lec05.pdf</p>
+<p>For an ever quicker introduction you need to understand an important principle…. the parsimony principle. Parsimony is the idea (AKA, Occam’s razor) that if two models fit the data equally well (e.g., have the roughly the same R-squared) then we should prefer the simpler model. How is one model simpler than the others? A simpler model has fewer X variables than a complex one. If we try to fit a line through 10 datapoints in 2 dimensions then it has 2 parameters (slope/intercept) and that’s pretty simple. But if we try to fit a 9th order polynomial (it has terms with <span class="math inline">\(x^9, x^8, \ldots, x\)</span> plus an intercept) then we will <em>perfectly</em> hit all 10 datapoints with zero RSS. But this wiggly curve will NOT generalize well to new data… we refer to this an overfit model because it is overly complex and fitting noise in the data as if it was signal.</p>
+<p>Adjusted R-squared, AIC, and BIC are all metrics that are related to each other (again math details elsewhere). These metrics reflect how good a model is at fitting data, but they also have complexity penalties built into them. If two models fit the data the same, but one is more complex these metrics will prefer the simpler model.</p>
+<p>Adjusted R-squared goes UP for better fit/simpler models and DOWN for worse fit/more complex models.</p>
+<p>AIC and BIC do the opposite. They go DOWN for better fit/simpler models and UP for worse fit/more complex models.</p>
+<p>Any of these metrics can be used to select among different potential models (e.g., our 3 models above). Generally BIC hates complex models more than the other two if you’re looking to penalize model complexity.</p>
+<p>So let’s compare our 3 models using BIC from the results tables above…. which model do you prefer?</p>
+</section>
+<section id="regressing-categorical-variables" class="level2">
+<h2 class="anchored" data-anchor-id="regressing-categorical-variables">Regressing categorical variables</h2>
+<div id="fc0c7aee-3d29-4263-bd38-2fb3b78e1ac4" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sns.histplot(df[<span class="st">'ViolCrime'</span>], bins<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Violent Crime'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="9ccb5742-18b6-4841-8e5a-0e59b1f842c6" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'ViolCrime'</span>].describe()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="7cb6a7f8-f942-427b-a737-ce658f122a13" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add a new categorical column for a 'Violent' state, arbitrarily pick a threshold from histogram</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'Violent'</span>] <span class="op">=</span> df[<span class="st">'ViolCrime'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: <span class="dv">0</span> <span class="cf">if</span> x <span class="op">&lt;</span> <span class="dv">11</span> <span class="cf">else</span> <span class="dv">1</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="0a6dbdc4-b3af-453a-ac9b-122f1722dc33" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>sns.boxplot(x<span class="op">=</span><span class="st">'Violent'</span>, y<span class="op">=</span><span class="st">'TeenBrth'</span>, data<span class="op">=</span>df)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="d514d9be-586c-4bea-bf36-2f68d542e425" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'TeenBrth ~ PovPct + C(Violent)'</span>, data<span class="op">=</span>df)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> mod.fit()</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="difference-in-means-t-test" class="level1">
+<h1>Difference in means: t-test</h1>
+<p>The t-test tests for a difference in means between two groups. Now that we have a categorical variable we can use a t-test to ask if there is a difference between violent states and non-violent ones in terms of teen birth rate</p>
+<p>Student’s t-test assumptions:</p>
+<ul>
+<li>Data are continuous</li>
+<li>Normally distributed</li>
+<li>Large enough sample size</li>
+<li>Equal variance b/w groups</li>
+</ul>
+<p><span class="math inline">\(H_0: \bar x = \bar y\)</span></p>
+<p><span class="math inline">\(H_a: \bar x \ne \bar y\)</span></p>
+<div id="8241bb11-9bb0-41ec-944f-a2c24b58ed68" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>df.groupby([<span class="st">'Violent'</span>])[<span class="st">'TeenBrth'</span>].mean()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><span class="math inline">\(H_0: \bar x_{ViolentTeenBirthRate} = \bar y_{NotViolentTeenBirthRate}\)</span></p>
+<p><span class="math inline">\(H_a: \bar x_{ViolentTeenBirthRate} \ne \bar y_{NotViolentTeenBirthRate}\)</span></p>
+<div id="98654da9-3b47-4a30-9423-499d79ddfd3a" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>group1 <span class="op">=</span> df.where(df.Violent<span class="op">==</span><span class="dv">0</span>).dropna()[<span class="st">'TeenBrth'</span>]</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>group2 <span class="op">=</span> df.where(df.Violent<span class="op">==</span><span class="dv">1</span>).dropna()[<span class="st">'TeenBrth'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="1dba2c63-bc99-4715-bf02-edcf96653ff4" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ttest_ind(group1, group2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The p-value here is <span class="math inline">\(0.02\)</span> …which means that observing this difference in means due to random chance alone is unlikely.</p>
+<p>By standard inferential threshold of <span class="math inline">\(p=0.05\)</span> we could reject the null in favor of the alternative hypothesis, concluding that the means between the groups are not the same and that violence is associated with an increase in Teen Birth Rate.</p>
+<p>I would personally tend to just report the p value, rather than using language like “this is statistically significant” or “we reject the null”. The p-value is a measure of how much evidence there is for rejecting the null, but you can let the reader decide for themselves what they think.</p>
+<p>NOW bad news… if we pick a different threshold for violence in a state, or if we kept DC in the data these values (and conclusion) would probably change!!!</p>
+</section>
+<section id="multicolinearity" class="level1">
+<h1>Multicolinearity</h1>
+<p>Lets force a colinearity problem by making a synthetic variable to show you what to look out for…</p>
+<p>specifically note that 1. condition number is large… that’s diagnosing the issue 2. coefficient on violent crime changes dramatically from before 3. coefficient on psuedoVC is similar in magnitude to violent crime, robbing it of the explanatory power it deserves 4. the sum of coefficients doesn’t arrive at the total it was at in previous model… again robbing it of explanatroy power</p>
+<div id="ec8735d1-4130-4cd8-8ea3-042c848cbb46" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'psuedoVC'</span>] <span class="op">=</span> df[<span class="st">'ViolCrime'</span>] <span class="op">*</span> <span class="fl">3.6</span> <span class="op">+</span> <span class="dv">112</span> <span class="op">+</span> <span class="dv">5</span><span class="op">*</span>np.random.rand(<span class="bu">len</span>(df))</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'TeenBrth ~ PovPct + ViolCrime + psuedoVC'</span>, data<span class="op">=</span>df)  </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> mod.fit()</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="regression-with-transformed-data" class="level1">
+<h1>Regression with transformed data</h1>
+<p>So far, we’ve been working with data that were approximately Normal and didn’t require transformation. But that won’t always be the case…</p>
+<div id="79ec09a7-0e7b-4a7e-a330-cc4d109c8dbb" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>sleep <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/shanellis/datasets/master/msleep.csv'</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>sleep.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>What if we were interested in quantifying the <strong>effect that REM sleep has on total sleep</strong>?</p>
+<p>We may hypothesize that the more REM sleep an animal gets the less total sleep it needs.</p>
+<div id="d67ff69b-298b-41fe-952c-639ba6b0ab16" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>sns.histplot(sleep[<span class="st">'sleep_rem'</span>].dropna())</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'REM Sleep (hours/night)'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>These data are skewed right, and transforming these data could help us use them in analysis…</p>
+<div id="fca1f425-716a-47cb-87d1-8a0718c1a6e3" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span><span class="st">'sleep_rem'</span>, y<span class="op">=</span><span class="st">'sleep_total'</span>, data<span class="op">=</span>sleep, s<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'REM Sleep'</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Total Sleep'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This relationship is not linear…so linear regression would not be appropriate</p>
+<section id="log-transformation" class="level3">
+<h3 class="anchored" data-anchor-id="log-transformation">Log Transformation</h3>
+<div id="03249dc2-225b-435b-ad50-fd6e4b1a4615" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add log-transofmed column to sleep_rem &amp; brainwt</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>sleep[<span class="st">'sleep_rem10'</span>] <span class="op">=</span> np.log10(sleep[<span class="st">'sleep_rem'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="c1416601-93e4-4adc-bde6-a8f82ad9cebb" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this now looks less skewed, more bell shaped</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>sns.histplot(sleep[<span class="st">'sleep_rem10'</span>].dropna())</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'log10(REM Sleep)'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="b727e203-22bd-4f4b-a21d-036a11005850" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># and therefore, this now looks closer to a linear relationship</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span><span class="st">'sleep_rem10'</span>, y<span class="op">=</span><span class="st">'sleep_total'</span>, data<span class="op">=</span>sleep, s<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'log10(REM Sleep)'</span>)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Total Sleep'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="linear-regression-with-transformed-data" class="level3">
+<h3 class="anchored" data-anchor-id="linear-regression-with-transformed-data">Linear regression with transformed data</h3>
+<div id="e6141118-3317-4395-9dd3-6648d4b1aa76" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># carry out regression using log-transformed predictor</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'sleep_total ~ sleep_rem10'</span>, data<span class="op">=</span>sleep)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> mod.fit()</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="0495148d-3a88-4223-8471-54e3c154b8bf" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># view our log transformed lmplot</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>sns.lmplot(x<span class="op">=</span><span class="st">'sleep_rem10'</span>,y<span class="op">=</span><span class="st">'sleep_total'</span>,data<span class="op">=</span>sleep)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="4c07ec31-531e-4975-a60d-baacfe6df135" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare above to the lmplot without log transformation</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>sns.lmplot(x<span class="op">=</span><span class="st">'sleep_rem'</span>,y<span class="op">=</span><span class="st">'sleep_total'</span>,data<span class="op">=</span>sleep)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Here, we see that the <span class="math inline">\(\beta_1\)</span> estimate for <code>sleep_rem10</code> is 10.89….but remember that this value is on the log scale.</p>
+<p><span class="math display">\[ Total Sleep = 8.57 + 10.89  * log_{10}(REM Sleep) \]</span></p>
+<p>To interpret this coefficient, we would say that</p>
+<p>a 1 unit increase in REM sleep, Total Sleep increases by <span class="math inline">\(\approx\)</span> <span class="math inline">\(10.89/100\)</span> units.</p>
+<div id="ab3b0a44-304f-45f6-aee3-01c04ff02c1e" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># interpreting a log transformed coefficient</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fl">10.89</span> <span class="op">/</span> <span class="dv">100</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>So, for each 1 hour increase in REM Sleep, Total Sleep increases by 0.11 hours.</p>
+<p>That’s not a large effect, but it is different than what we hypothesized at the beginning!</p>
+<p>More on interpretation of log transformed variables can be read <a href="https://www.cscu.cornell.edu/news/statnews/stnews83.pdf">here</a></p>
+</section>
+<section id="why-is-log-transformation-not-math-trickery" class="level3">
+<h3 class="anchored" data-anchor-id="why-is-log-transformation-not-math-trickery">Why is log-transformation not math trickery?</h3>
+<p>First, some reading on data transformation can be found <a href="http://fmwww.bc.edu/repec/bocode/t/transint.html">here</a>. It’s not beautifully formatted, but I think it is written in a more-straightforward manner than some <a href="https://stats.stackexchange.com/questions/4831/regression-transforming-variables/4833#4833">other</a> <a href="https://stats.stackexchange.com/questions/298/in-linear-regression-when-is-it-appropriate-to-use-the-log-of-an-independent-va">places</a> <a href="https://www.researchgate.net/post/Why_do_we_do_transformation_before_data_analysis">online</a>.</p>
+<p>But a basic understanding can be had in just a few bullet points - measurement scales may be arbitrary. there’s nothing to say log transforms aren’t a better measurement scale than the original - you are already familiar with many logrithmic measurement scales: decibels and Richter scale for measuring earthqueakes are two examples - lots of things are power-law distributed or close to power-law distributed… the frequency of words in a language, human vision and auditory abilities in perception, the number of social media followers people have. - log transforms make a process that had been multiplicative or power law like (<span class="math inline">\(a*b^n\)</span>) into an additive process (<span class="math inline">\(a+n*b\)</span>) which really helps when you’re trying to apply linear regression for obvious reasons - log transforms can reduce heteroscadacity and skewness, which may make the data amenable to linear regression when it hadn’t been before</p>
+<p>The first thing to remember is there is (in most cases) nothing special about how the data are originally expressed.</p>
+<p>In our example above, there is nothing about “hours” as the unit that was chosen that makes these data “correct”.</p>
+<p>So, while it <em>feels</em> like data transformation is trickery, our initial unit of hours is…in some ways arbitrary and something that we chose.</p>
+<p>This is where we’ll start with our argument that it’s ok to transform (or think of it as <em>re-express</em>) our data so that it can be (still-accurately) used with well-studied models.</p>
+<p>To make the point a little more concretely, all the following things are measured on a log scale: pH (measurement of acidity), dB (measure of sound loudness), and Richter scale (earthquake intensity). All of them <em>could</em> be measured on a linear scale. Those measurements would still explain those things…it would just be on a different scale.</p>
+<p>In other words:</p>
+<blockquote class="blockquote">
+<p>“Transformations are needed because there is no guarantee that the world works on the scales it happens to be measured on.”</p>
+</blockquote>
+<p>What <em>does</em> differ however, is the interprtation. Linear scales tell us absolute change, while logarithmic scales tell us relative change.</p>
+</section>
+</section>
+<section id="differences-in-means-by-anova" class="level1">
+<h1>Differences in means by ANOVA</h1>
+<p>What if we have more than two possible levels in our categorical variable? T-tests are for only two things, e.g.&nbsp;male/female, violent/non-violent. What if we have regions of the US, like midwest, west, northeast… there’s more than two of those!</p>
+<p>Thats where a group-wise test like ANOVA (Analysis of Variance) is perfect. It works by trying to assign responsibility for the total variability of your dependent variable to variability of your independent variable.</p>
+<p>Parametric ANOVA test assumptions</p>
+<ul>
+<li>Population distributions are normal</li>
+<li>Samples have equal variances</li>
+<li>Independence</li>
+</ul>
+<p>Hypothesis</p>
+<p>$H_0: x_1 = x_2 = x_3 $</p>
+<p>$H_a: $ at least one group mean is different</p>
+<div id="3ad257d0-7157-4dc7-9666-d73018a4f73b" class="cell" data-scrolled="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>regions <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/cphalpert/census-regions/master/us</span><span class="sc">%20c</span><span class="st">ensus%20bureau</span><span class="sc">%20r</span><span class="st">egions%20and</span><span class="sc">%20d</span><span class="st">ivisions.csv'</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>regions <span class="op">=</span> regions.rename({<span class="st">'State'</span>:<span class="st">'Location'</span>},axis<span class="op">=</span><span class="dv">1</span>).set_index(<span class="st">'Location'</span>)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>regions.index <span class="op">=</span> regions.index.<span class="bu">str</span>.replace(<span class="st">' '</span>,<span class="st">'_'</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="435fda2f-5787-42b0-87a3-ef87eb40e389" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.join(regions[<span class="st">'Region'</span>])</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>So how would you run an ANOVA checking for a difference in TeenBrth across regions?</p>
+<p>this is left as an exercise to the reader. But there are two major options for you. If you want to manually group the categorical variable (<span class="math inline">\(\bar x_1 = \bar x_2 = \bar x_3\)</span>) you can use scipy: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.f_oneway.html</p>
+<p>If you want to build a model that is more precise or custom, with automatic grouping by a variable inside the dataframe then you can use statsmodels: https://www.statsmodels.org/dev/anova.html</p>
+<div id="58737798-2133-46aa-994f-8e4acfb100ef" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># build your regional ANOVA here</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="shhh-dont-tell-anyone" class="level2">
+<h2 class="anchored" data-anchor-id="shhh-dont-tell-anyone">Shhh don’t tell anyone</h2>
+<p>Would you like to know a secret?</p>
+<p>An ANOVA with one categorical variable that takes different levels (region) vs one numerical variable (e.g., TeenBrth) is identical to 1. Fitting a linear regression <code>"TeenBrth~C(region)"</code> and… 2. Looking at the p-value for the total variability across all regions (whereas a linear regression model will also return seperate p-values for each region)</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
