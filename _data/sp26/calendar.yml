@@ -7,7 +7,7 @@
         - label: LEC
           type: lecture
           title: Welcome!
-          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/00-Welcome.pdf
+          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/00-Welcome.pdf
 
     - date: "2026-04-01"
       in_class: true
