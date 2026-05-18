@@ -65,7 +65,7 @@
         - label: LEC
           type: lecture
           title: Data Wrangling
-          slides: https://github.com/COGS108/Lectures-Sp26/blob/main/05-Pandas.ipynb
+          slides: /assets/notebookLectures/05-Pandas.html
         - label: DUE
           type: hw
           title: "<b>D1 due</b>"
@@ -107,7 +107,7 @@
         - label: LEC
           type: lecture
           title: Data viz principles
-          slides: https://github.com/COGS108/Lectures-Sp26/blob/main/08-Datavis.ipynb
+          slides: /assets/notebookLectures/08-Datavis.html
         - label: DUE
           type: hw
           title: "<b>D2 due</b>"
@@ -149,6 +149,7 @@
         - label: LEC
           type: lecture
           title: Inference I
+          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/11-Inference1.pdf
         - label: DUE
           type: hw
           title: "<b>D3 due</b>"
@@ -165,6 +166,7 @@
         - label: LEC
           type: lecture
           title: Inference II
+          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/12-Inference2.pdf
 
     - date: "2026-04-29"
       in_class: true
@@ -172,6 +174,7 @@
         - label: LEC
           type: lecture
           title: Non parametric inference
+          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/13-Nonparametric-Inference.pdf
         - label: DUE
           type: hw
           title: "<b>Project Proposal due</b>"
@@ -185,6 +188,7 @@
         - label: LEC
           type: lecture
           title: Linear models I
+          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/14-Models.pdf
         - label: DUE
           type: hw
           title: "<b>D4 due</b>"
@@ -201,6 +205,7 @@
         - label: LEC
           type: lecture
           title: Linear models II
+          slides: /assets/notebookLectures/15-Inference-and-models.html
 
     - date: "2026-05-06"
       in_class: true
@@ -208,6 +213,7 @@
         - label: LEC
           type: lecture
           title: Dimensionality Reduction
+          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/16-Dimensionality-Reduction.pdf
         - label: DUE
           type: hw
           title: "<b>A2 due</b>"
@@ -221,6 +227,7 @@
         - label: LEC
           type: lecture
           title: Machine Learning I
+          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/17-Machine-Learning.pdf
         - label: DUE
           type: hw
           title: "<b>D5 due</b>"
@@ -237,6 +244,7 @@
         - label: LEC
           type: lecture
           title: Machine Learning II
+          slides: https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/18-Measuring-Machine-Learning.pdf
 
     - date: "2026-05-13"
       in_class: true
@@ -387,4 +395,3 @@
         - label: DUE
           type: hw
           title: "<b>Post-course survey due</b>"
-          

@@ -1,0 +1,1358 @@
+---
+---
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Data Wrangling</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="05-Pandas_files/libs/clipboard/clipboard.min.js"></script>
+<script src="05-Pandas_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="05-Pandas_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="05-Pandas_files/libs/quarto-html/popper.min.js"></script>
+<script src="05-Pandas_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="05-Pandas_files/libs/quarto-html/anchor.min.js"></script>
+<link href="05-Pandas_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="05-Pandas_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="05-Pandas_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="05-Pandas_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="05-Pandas_files/libs/bootstrap/bootstrap-efbb37e9afcc02144ebbc7afd12a776f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Data Wrangling</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<ul>
+<li><code>pandas</code></li>
+<li>Where to find data?
+<ul>
+<li>Web Scraping &amp; APIs</li>
+</ul></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://colab.research.google.com/github/COGS108/Lectures-Sp26/blob/main/05-Pandas.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid figure-img"></a></p>
+<figcaption>Open In Colab</figcaption>
+</figure>
+</div>
+<center>
+<img src="https://raw.githubusercontent.com/COGS108/Lectures-Wi22/main/02_python/img/pandas.png" alt="pandas" width="600px">
+</center>
+<p>Pandas is Python library for managing heterogenous data.</p>
+<p>At its core, Pandas is used for the <strong>DataFrame</strong> object, which is: - a data structure for labeled rows and columns of data - associated methods and utilities for working with data. - each column contains a <code>pandas</code> <strong>Series</strong></p>
+<section id="after-this" class="level1">
+<h1>After this</h1>
+<p>When you are done with this exercise/lecture… the real learning can begin!</p>
+<p>One of your best tools is https://pandastutor.com</p>
+<p>Another is the documentation for pandas including https://pandas.pydata.org/docs/user_guide/10min.html</p>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<div id="cell-6" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import standard libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>matplotlib inline</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-7" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reminder about tab completion and contextual help</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="loading-data" class="level2">
+<h2 class="anchored" data-anchor-id="loading-data">Loading Data</h2>
+<div id="cell-9" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load a csv file of data</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># two ways to load data... </span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. directly from local disk </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># use this if you cloned the lectures repo to your laptop or datahub</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># and are operating there</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'data/my_data.csv'</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. via http from the web</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># use this if you are on Google Colab</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># (comment out above line, uncomment the below line)</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># df = pd.read_csv('https://raw.githubusercontent.com/COGS108/Lectures-Sp26/refs/heads/main/data/my_data.csv')</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'total elements:'</span>,df.size,<span class="st">'</span><span class="ch">\n</span><span class="st">shape of table'</span>,df.shape)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-10" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check out the data, try all the options below</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># first few rows: df.head()</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># or last few rows: df.tail()</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># or both the first few and last few: df</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>df.head(<span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Pandas DataFrame: - A table composed of rows and columns - Each column is a datatype called pd.Series (like a list but better) - So each pd.DataFrame table is like a list of lists (but better) - Index for each row (this can be almost any data type, numbers or strings or ???) - Index for each column (this can be almost any data type, numbers or strings or ???) - Inside each cell of the dataframe you can store almost any data type - You SHOULD use a dataframe in TIDY format (but nobody forces you to) - each observation should be on one row - each observation should have a unique identifier in the row index - each variable should be in one column - each variable shoudl have a unique name in the column index - Dataframes are objects, they don’t just store data they also have methods to operate on the data built into the dataframe - For tidying and cleaning the data - For slicing up data or joining different data sources together - For summarizing and plotting the data - And more!</p>
+</section>
+<section id="slicing" class="level2">
+<h2 class="anchored" data-anchor-id="slicing">Slicing</h2>
+<p>Slicing can be done with three different syntax forms: - by column name: <code>df['column name']</code> - by row index and/or column name: - <code>df.loc[x]</code> gets all columns of row x - <code>df.loc[x,y]</code> gets whatever is at row x, column y - <code>df.loc[:,y]</code> gets all rows of column y - x, y can be anything that is in the row index or column names… sometimes those can be numeric or string - x, y can also be ranges, e.g., 3:7 or ‘blood glucose’:‘blood pressure’ - note that if an index is numeric and you slice it 1:3 you will get elements 1, 2, and 3. This is different than normal list slicing in Python (see below) - by zero-indexed numeric position: - <code>df.iloc[0,:]</code> gets all columns of the zeroth (top) row - <code>df.iloc[1,:]</code> gets all columns of the first (one down from the top) row - <code>df.iloc[17,9]</code> gets whatever is at row 17, column 9 - <code>df.iloc[:,3:6]</code> gets all rows of columns 3, 4, and 5 - note that .loc ranges are just like normal list slicing in Python, 3:6 means from element 3 up to but not including 6 - you can use .iloc to slice things that have non-numeric indices… e.g.&nbsp;a df with column names <code>['test1', 'test2', 'hw1', 'hw2']</code> sliced <code>df.iloc[:,1:3]</code> will give you columns <code>['test2', 'hw1']</code></p>
+<div id="cell-13" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Slicing (Indexing): select a Series (column) using its name</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'age'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-14" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Slicing: select a row &amp; column BY NAME with 'loc'</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df.loc[<span class="dv">4</span>, <span class="st">'age'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-15" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># slicing: getting several rows/columns at a time</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df.loc[<span class="dv">3</span>:<span class="dv">8</span>, [<span class="st">'age'</span>, <span class="st">'last_name'</span>] ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-16" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># slicing: getting several rows/columns at a time</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df.loc[[<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">9</span>], <span class="st">'first_name'</span>:<span class="st">'age'</span> ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-17" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># slicing by the POSITION (not name!)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df.iloc[<span class="dv">4</span>:<span class="dv">8</span>,<span class="dv">2</span>:<span class="dv">4</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-18" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>name_df <span class="op">=</span> df.set_index(<span class="st">'last_name'</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>name_df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-19" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>name_df.loc[[<span class="st">'Clark'</span>,<span class="st">'Thomas'</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="question-1a" class="level4">
+<h4 class="anchored" data-anchor-id="question-1a">Question #1A</h4>
+<p>What would be the output of <code>df['age'] &gt; 10</code>?</p>
+<ul>
+<li><ol type="A">
+<li>subset of <code>df</code> including only rows of individuals older than 10</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>a Boolean with <code>True</code> for rows where age is greater than 10 and <code>False</code> otherwise</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li><code>id</code>s of rows where observations are greater than 10</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>an error</li>
+</ol></li>
+<li><ol start="5" type="A">
+<li>I’m super lost</li>
+</ol></li>
+</ul>
+</section>
+<section id="question-1b" class="level4">
+<h4 class="anchored" data-anchor-id="question-1b">Question #1B</h4>
+<p>Given the answer to 1A, how can you use that to method to select all the rows with age&gt;50?</p>
+<p>How about with age&gt;50 and also having a score==-1?</p>
+<p>Use the cell below to work these out…</p>
+<div id="cell-22" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">### YOUR CODE HERE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="other-ways-to-select" class="level4">
+<h4 class="anchored" data-anchor-id="other-ways-to-select">Other ways to select…</h4>
+<p>For simpler selection tasks you can also use: - .query() - .set_index().loc[] but slicing as we did above is the most general, flexible method suitable for very complicated situations</p>
+<div id="cell-24" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">'first_name == "Andrea" '</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># is the same thing as</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># df.set_index('first_name').loc['Andrea']</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-25" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. you can slice (UNIQUE!) strings just like you can slice numbers</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. if there is a string of pandas operations you can break them up </span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#    into multiple lines inside parentheses to make it easier to read</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    df</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    .set_index(<span class="st">'last_name'</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    .loc[<span class="st">'Atkins'</span>:<span class="st">'Prince'</span>]</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>NOTE: .loc uses the index, whatever it is, and sometimes the index is NOT numeric!</p>
+<p>Compare this usage</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df.set_index(<span class="st">'age'</span>).loc[<span class="dv">52</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>to the usage in the previous cell</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>df.set_index(<span class="st">'first_name'</span>).loc[<span class="st">'Andrea'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In contrast .iloc is always positional… the i stands for index. Therefore</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df.set_index(<span class="st">'age'</span>).iloc[<span class="dv">5</span>:<span class="dv">15</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>and</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>df.set_index(<span class="st">'first_name'</span>).iloc[<span class="dv">5</span>:<span class="dv">15</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>produce the same output rows – the 5th up to but not including the 15th – but obviously with a different index in each case</p>
+</section>
+</section>
+<section id="checking-out-the-dataframe" class="level2">
+<h2 class="anchored" data-anchor-id="checking-out-the-dataframe">Checking out the DataFrame</h2>
+<div id="cell-28" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check how large our dataframe is</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df.shape</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-29" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check what columns we have in our DataFrame</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>df.columns</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-30" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># What is the row index?</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>df.index</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-31" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># What is the column index?</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>df.columns</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-32" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the datatypes of each column (variable)</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>df.dtypes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="exploring-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-the-data">Exploring the data</h2>
+<ul>
+<li>quantitative (numbers)</li>
+<li>qualitative (categorical)</li>
+<li>basic descriptive statistics</li>
+</ul>
+<div id="cell-34" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking categorical data</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'first_name'</span>].value_counts()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-35" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check a particular descriptive statistic, like mean(), median(), mode(), std(), var(), etc</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">'id'</span>,<span class="st">'age'</span>,<span class="st">'value'</span>]].median()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-36" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Describe a particular column</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'value'</span>].describe()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-37" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get descriptive statistics of all numerical columns</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>df.describe()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="question-2a" class="level4">
+<h4 class="anchored" data-anchor-id="question-2a">Question #2A</h4>
+<p>What’s the average (mean) age of the individuals in this dataset?</p>
+<ul>
+<li><ol type="A">
+<li>14</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>46</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>28730</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>NA</li>
+</ol></li>
+<li><ol start="5" type="A">
+<li>I’m super lost/unsure</li>
+</ol></li>
+</ul>
+</section>
+<section id="question-2b" class="level4">
+<h4 class="anchored" data-anchor-id="question-2b">Question #2B</h4>
+<p>Use the code cell below to find the average age of adults (excluding minors age&lt;18) in this dataset.</p>
+<div id="cell-40" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">### YOUR CODE HERE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="pandas-common-manipulations" class="level2">
+<h2 class="anchored" data-anchor-id="pandas-common-manipulations"><code>pandas</code>: Common Manipulations</h2>
+<p>You’ll want to be <em>very</em> familiar with a few common data manipulations when wrangling data, each of which is described below:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 36%">
+<col style="width: 63%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Manipulation</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>select</strong></td>
+<td>select which columns to include in dataset</td>
+</tr>
+<tr class="even">
+<td><strong>filter</strong></td>
+<td>filter dataset to only include specified rows</td>
+</tr>
+<tr class="odd">
+<td><strong>mutate</strong></td>
+<td>add a new column based on values in other columns</td>
+</tr>
+<tr class="even">
+<td><strong>groupby</strong></td>
+<td>group values to apply a function within the specified groups</td>
+</tr>
+<tr class="odd">
+<td><strong>summarize</strong></td>
+<td>calculate specified summary metric of a specified variable</td>
+</tr>
+<tr class="even">
+<td><strong>arrange</strong></td>
+<td>sort rows ascending or descending order of a specified column</td>
+</tr>
+<tr class="odd">
+<td><strong>merge</strong></td>
+<td>join separate datasets into a single dataset based on a common column</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="selecting-dropping-columns" class="level2">
+<h2 class="anchored" data-anchor-id="selecting-dropping-columns">Selecting &amp; Dropping Columns</h2>
+<ul>
+<li>include subset of columns of larger data frame</li>
+</ul>
+<div id="cell-43" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-44" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># specify which columns to include</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>select_df <span class="op">=</span> df[[<span class="st">'id'</span>, <span class="st">'age'</span>, <span class="st">'score'</span>, <span class="st">'value'</span>]]</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>select_df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-45" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop rows we don't want</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>new_df <span class="op">=</span> df.drop(labels<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">6</span>], axis<span class="op">=</span><span class="st">'rows'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-46" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check out the DataFrame after dropping, what went wrong and how do we fix it?</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>new_df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="filtering-data-slicing" class="level2">
+<h2 class="anchored" data-anchor-id="filtering-data-slicing">Filtering Data (slicing)</h2>
+<ul>
+<li>include a subset (slice) of rows from larger data frame</li>
+</ul>
+<div id="cell-48" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if we have any data from people below the age of 18</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="bu">sum</span>(df[<span class="st">'age'</span>] <span class="op">&lt;</span> <span class="dv">18</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-49" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>df.loc[(df[<span class="st">'age'</span>] <span class="op">&lt;</span> <span class="dv">18</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-50" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select only participants who are 18 or older  AND who have a score of -1</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>df_new <span class="op">=</span> df[ (df[<span class="st">'age'</span>] <span class="op">&gt;=</span> <span class="dv">18</span>)] <span class="co"># &amp; (df['score']==-1)]</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>df_new</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="missing-data-nans" class="level2">
+<h2 class="anchored" data-anchor-id="missing-data-nans">Missing Data (NaNs)</h2>
+<div id="cell-52" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>df.isna?</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-53" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># note in class</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co"># can operate on entire dataframe</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>df.isnull()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-54" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for null values by row</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>df.isnull().<span class="bu">sum</span>(axis<span class="op">=</span><span class="st">'rows'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-55" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Have a look at the missing values</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>df[df[<span class="st">'value'</span>].isna()]</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co"># can also use isnull()!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="dealing-with-missing-data---nans" class="level2">
+<h2 class="anchored" data-anchor-id="dealing-with-missing-data---nans">Dealing with Missing Data - NaNs</h2>
+<div id="cell-57" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dealing with null values: Drop rows with missing data</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'before dropping null rows'</span>,df.shape)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>no_na_df <span class="op">=</span> df.dropna()</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'new shape'</span>, no_na_df.shape)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-58" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># or you can fill in a value for those missing values!</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>df.fillna?</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co"># df.fillna(100) or df.fillna( df['value'].mean() ) or just df.fillna()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="finding-missing-data---bad-values" class="level2">
+<h2 class="anchored" data-anchor-id="finding-missing-data---bad-values">Finding Missing Data - Bad Values</h2>
+<div id="cell-60" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for the properties of specific columns</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'score'</span>].describe()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-61" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>df[df.score<span class="op">&lt;</span><span class="dv">0</span>].shape</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-62" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the plot of the data for score to see the distribution</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'score'</span>].plot(kind<span class="op">=</span><span class="st">'hist'</span>, bins<span class="op">=</span><span class="dv">25</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-63" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>df.hist()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="dealing-with-missing-data---bad-values" class="level2">
+<h2 class="anchored" data-anchor-id="dealing-with-missing-data---bad-values">Dealing with Missing Data - Bad Values</h2>
+<div id="cell-65" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Look for how many values have a -1 value in 'score'</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="bu">sum</span>(df[<span class="st">'score'</span>] <span class="op">==</span> <span class="op">-</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-66" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop any row with -1 value in 'score'</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[df[<span class="st">'score'</span>] <span class="op">!=</span> <span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>df.shape</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="creating-new-columns-mutating" class="level2">
+<h2 class="anchored" data-anchor-id="creating-new-columns-mutating">Creating new columns (mutating)</h2>
+<ul>
+<li><code>assign</code> can be very helpful in adding a new column</li>
+<li>lambda functions can be used to carry out calculations</li>
+</ul>
+<div id="cell-68" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert age in years to age in (approximate) days</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.assign(age_days <span class="op">=</span> df[<span class="st">'age'</span>] <span class="op">*</span> <span class="dv">365</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-69" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'age_months'</span>] <span class="op">=</span> df[<span class="st">'age'</span>] <span class="op">*</span> <span class="dv">12</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="grouping-summarizing" class="level2">
+<h2 class="anchored" data-anchor-id="grouping-summarizing">Grouping &amp; summarizing</h2>
+<ul>
+<li>group by a particular variable</li>
+<li>calculate summary statistics/metrics within group</li>
+</ul>
+<div id="cell-71" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>df.first_name.value_counts()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-72" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># caclculate average within each age</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'first_name'</span>).age.mean()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="sorting-rows-arrange" class="level2">
+<h2 class="anchored" data-anchor-id="sorting-rows-arrange">Sorting Rows (arrange)</h2>
+<ul>
+<li>specify order in which to display rows</li>
+</ul>
+<div id="cell-74" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-75" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sort by values in age</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.sort_values(by <span class="op">=</span> [<span class="st">'age'</span>],ascending<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="question-3" class="level4">
+<h4 class="anchored" data-anchor-id="question-3">Question #3</h4>
+<p>How would you find the average score of people who are over 30 vs people who are 30 and younger?</p>
+<div id="cell-77" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co">#### YOUR CODE HERE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="combining-datasets" class="level2">
+<h2 class="anchored" data-anchor-id="combining-datasets">Combining datasets</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://raw.githubusercontent.com/COGS108/Lectures-Fa24/main/img/join.png" class="img-fluid figure-img"></p>
+<figcaption>image of join operations</figcaption>
+</figure>
+</div>
+<div id="cell-79" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Create two DataFrames</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>left <span class="op">=</span> pd.DataFrame({<span class="st">'key'</span>: [<span class="st">'A'</span>, <span class="st">'B'</span>, <span class="st">'C'</span>, <span class="st">'D'</span>], <span class="st">'value'</span>: np.random.randn(<span class="dv">4</span>)})    </span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>right <span class="op">=</span> pd.DataFrame({<span class="st">'key'</span>: [<span class="st">'B'</span>, <span class="st">'D'</span>, <span class="st">'E'</span>, <span class="st">'F'</span>], <span class="st">'value'</span>: np.random.randn(<span class="dv">4</span>)})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-80" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>left</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-81" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>right</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-82" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># inner merge</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>pd.merge(left, right, on<span class="op">=</span><span class="st">'key'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-83" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># right merge</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>pd.merge(left, right, on<span class="op">=</span><span class="st">'key'</span>, how<span class="op">=</span><span class="st">'right'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-84" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># left merge</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>pd.merge(left, right, on<span class="op">=</span><span class="st">'key'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-85" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># outer join</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>pd.merge(left, right, on<span class="op">=</span><span class="st">'key'</span>, how<span class="op">=</span><span class="st">'outer'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-86" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># USE this cell to figure out if .merge() has a default "how" argument... i.e. what happens if you leave out how='...'</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="co">### YOUR CODE HERE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="heres-our-check-in-for-today-httpsforms.gleepns7byhfaxvbm4x7" class="level2">
+<h2 class="anchored" data-anchor-id="heres-our-check-in-for-today-httpsforms.gleepns7byhfaxvbm4x7">Here’s our check-in for today: https://forms.gle/EpNS7BYhfAxvBM4X7</h2>
+<p>No, I didn’t put a QR code here because I expect you to be actively engaged in this notebook, not staring at my screen passively. Get the notebook running and click the link above.</p>
+<section id="question-4" class="level4">
+<h4 class="anchored" data-anchor-id="question-4">Question #4</h4>
+<p>How could you take the results of the outer merge and fill in the NaNs with the last good entry above the missing number in the each column? Hint: look at the pandas docs for .fill()</p>
+<div id="cell-89" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># USE this cell to figure out this question</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="co">### YOUR CODE HERE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="visualizing-data" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-data">Visualizing Data</h2>
+<ul>
+<li>We’ll have a whole lecture (or two) on visualization</li>
+<li>For now, we’ll just look at one uniquely-pandas approach</li>
+<li>if you want to play around try
+<ul>
+<li>df[‘age’].hist()</li>
+<li>df.groupby(‘age’)[‘score’].mean().plot()</li>
+</ul></li>
+</ul>
+<div id="cell-92" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot all numerical columns, and their interactions</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>pd.plotting.scatter_matrix(df[[<span class="st">'age'</span>, <span class="st">'score'</span>, <span class="st">'value'</span>]], figsize<span class="op">=</span>[<span class="dv">12</span>, <span class="dv">12</span>], marker<span class="op">=</span><span class="dv">12</span>)<span class="op">;</span>  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="getting-data-directly-from-the-internet" class="level1">
+<h1>Getting data directly from the internet</h1>
+<p>There are several ways you can load data into Pandas dataframes directly from the internet. You don’t need to have the data stored locally at all. 1. Use pd.read_csv(URL) or similar command to grab publicly visible files with their own HTTP address. 2. Web scrape HTML files and their contents 3. Use Application Program Interface (API) libraries like <code>gspread</code> to read data directly from cloud services (in this case from Google Sheets) 4. Use REST APIs to construct HTTP requests that will return well-organized data directly without scraping</p>
+<p>Below we will show examples of some of these use cases… you can read the docs and learn more about these methods on your own!</p>
+<section id="direct-http-access-to-files" class="level2">
+<h2 class="anchored" data-anchor-id="direct-http-access-to-files">Direct HTTP access to files</h2>
+<p>GitHub and Google Drive and Dropbox can all give you sharing links for a file that will let you load the file from the cloud. For instance you can get a file directly from its GitHub http address by adding ‘?raw=True’ to the end of the URL. This works nicely if you don’t want to bother with cloning a repo that contains a file before loading that file from your local filesystem.</p>
+<div id="cell-94" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># enrollment data for UCSD courses in Sp25</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>pd.read_csv(<span class="st">'https://github.com/jasongfleischer/UCSDHistEnrollData/blob/master/data/schedules/SP25.tsv?raw=True'</span>, sep<span class="op">=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>)</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="co"># NB: this is read_csv() but I'm using it to read a tsv file!</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="co"># the function takes a sep argument that let's you specify the column seperator... </span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a><span class="co"># in this case the file is tab seperated between columns not comma seperated</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="web-scraping" class="level2">
+<h2 class="anchored" data-anchor-id="web-scraping">Web scraping</h2>
+<p><code>requests</code> is a python library that allows you to construct and send URL requests to websites. It will also dump back to you the HTML or other data type returned by the website. If you’re web scraping or using a REST API (see next section!) you will probably use requests or some similar tool</p>
+<p>BeatifulSoup is the standard library for webscraping in Python. It works by giving you pattern matching tools to extract data from within HTML tags.</p>
+<p>Its easier to show an example than explain… but note that you will find lots of examples and tutorials for these if you search around!</p>
+<p>Let’s start with installing some libraries that (at least on my computer) needed to be installed to do this right</p>
+<div id="cell-96" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># if you get a lot of requirement already satisfied prints here that's great!</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="co"># if there's an installation happening you may (or may not) need to restart your kernel to get these to work</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>pip install lxml html5lib</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-97" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests <span class="co"># allows you to send URL requests and recieve the data back</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup <span class="co"># the most used web scraper in python land</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Request Jason's Github repositories page </span></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>page <span class="op">=</span> requests.get(<span class="st">'https://github.com/jasongfleischer?tab=repositories'</span>)  </span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a><span class="co"># The content we get back is a messily organized html file</span></span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(page.text[:<span class="dv">1000</span>])  <span class="co">#  this goes on for a dozen pages, show only the first thousand characters of the web page</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Now using a webscraper is an exercise in frustration and detailed reading of this ugly ugly HTML mess. Modern webpages have hundreds or thousands of tags… and to scrape you need to identify which tag types are holding the data you want off the page. This is a manual, detailed, and often frustrating process.</p>
+<p>Below you can see an example of how this can work. First start by making a BeautifulSoup instance and feeding it the text coming out from our URL request</p>
+<div id="cell-99" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>soup <span class="op">=</span> BeautifulSoup(page.text, <span class="st">'html.parser'</span>)</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify repository elements.</span></span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the HTML structure of a GitHub repositories page in your browser's developer tools. </span></span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Look for a common element or class that encloses each repository entry. </span></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Typically, each element you want (in this case a repo in the list) </span></span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Will live within a &lt;div&gt;, &lt;span&gt;, &lt;li&gt;, &lt;h2&gt;, or other tag.  </span></span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a><span class="co"># You would then use soup.find_all() to select all these elements.</span></span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a><span class="co"># in our case there's a weirdly styled &lt;li&gt; (list item) that marks out repos today</span></span>
+<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a>repositories <span class="op">=</span> soup.find_all(<span class="st">'li'</span>, class_<span class="op">=</span><span class="st">'col-12 d-flex flex-justify-between width-full py-4 border-bottom color-border-muted public source'</span>)</span>
+<span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a><span class="co"># You may need to adjust the class based on current GitHub structure... html will change without warning from time to time!!</span></span>
+<span id="cb68-13"><a href="#cb68-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-14"><a href="#cb68-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract repository details.</span></span>
+<span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a><span class="co"># that &lt;li&gt; tag was just the outer casing.  Each repo has different elements we want.</span></span>
+<span id="cb68-16"><a href="#cb68-16" aria-hidden="true" tabindex="-1"></a><span class="co"># So we iterate through each identified repository element and extract the desired information, such as:</span></span>
+<span id="cb68-17"><a href="#cb68-17" aria-hidden="true" tabindex="-1"></a><span class="co">#   Name: Usually within an h3 or a tag.</span></span>
+<span id="cb68-18"><a href="#cb68-18" aria-hidden="true" tabindex="-1"></a><span class="co">#   Description: Often in a p tag.</span></span>
+<span id="cb68-19"><a href="#cb68-19" aria-hidden="true" tabindex="-1"></a><span class="co">#   Language: Typically found within a span or li tag with a specific class.</span></span>
+<span id="cb68-20"><a href="#cb68-20" aria-hidden="true" tabindex="-1"></a><span class="co">#   Stars: Look for elements containing star icons or star counts.</span></span>
+<span id="cb68-21"><a href="#cb68-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-22"><a href="#cb68-22" aria-hidden="true" tabindex="-1"></a>repo_data <span class="op">=</span> []</span>
+<span id="cb68-23"><a href="#cb68-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> repo <span class="kw">in</span> repositories:</span>
+<span id="cb68-24"><a href="#cb68-24" aria-hidden="true" tabindex="-1"></a>        name_tag <span class="op">=</span> repo.find(<span class="st">'a'</span>, itemprop<span class="op">=</span><span class="st">'name codeRepository'</span>)</span>
+<span id="cb68-25"><a href="#cb68-25" aria-hidden="true" tabindex="-1"></a>        name <span class="op">=</span> name_tag.text.strip() <span class="cf">if</span> name_tag <span class="cf">else</span> <span class="st">"N/A"</span></span>
+<span id="cb68-26"><a href="#cb68-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-27"><a href="#cb68-27" aria-hidden="true" tabindex="-1"></a>        description_tag <span class="op">=</span> repo.find(<span class="st">'p'</span>, itemprop<span class="op">=</span><span class="st">'description'</span>)</span>
+<span id="cb68-28"><a href="#cb68-28" aria-hidden="true" tabindex="-1"></a>        description <span class="op">=</span> description_tag.text.strip() <span class="cf">if</span> description_tag <span class="cf">else</span> <span class="st">"No description"</span></span>
+<span id="cb68-29"><a href="#cb68-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-30"><a href="#cb68-30" aria-hidden="true" tabindex="-1"></a>        language_tag <span class="op">=</span> repo.find(<span class="st">'span'</span>, itemprop<span class="op">=</span><span class="st">'programmingLanguage'</span>)</span>
+<span id="cb68-31"><a href="#cb68-31" aria-hidden="true" tabindex="-1"></a>        language <span class="op">=</span> language_tag.text.strip() <span class="cf">if</span> language_tag <span class="cf">else</span> <span class="st">"N/A"</span></span>
+<span id="cb68-32"><a href="#cb68-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-33"><a href="#cb68-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Example for stars (may vary)</span></span>
+<span id="cb68-34"><a href="#cb68-34" aria-hidden="true" tabindex="-1"></a>        star_tag <span class="op">=</span> repo.find(<span class="st">'a'</span>, href<span class="op">=</span><span class="kw">lambda</span> href: href <span class="kw">and</span> <span class="st">'stargazers'</span> <span class="kw">in</span> href)</span>
+<span id="cb68-35"><a href="#cb68-35" aria-hidden="true" tabindex="-1"></a>        stars <span class="op">=</span> star_tag.text.strip() <span class="cf">if</span> star_tag <span class="cf">else</span> <span class="st">"0"</span></span>
+<span id="cb68-36"><a href="#cb68-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-37"><a href="#cb68-37" aria-hidden="true" tabindex="-1"></a>        repo_data.append({</span>
+<span id="cb68-38"><a href="#cb68-38" aria-hidden="true" tabindex="-1"></a>            <span class="st">'name'</span>: name,</span>
+<span id="cb68-39"><a href="#cb68-39" aria-hidden="true" tabindex="-1"></a>            <span class="st">'description'</span>: description,</span>
+<span id="cb68-40"><a href="#cb68-40" aria-hidden="true" tabindex="-1"></a>            <span class="st">'language'</span>: language,</span>
+<span id="cb68-41"><a href="#cb68-41" aria-hidden="true" tabindex="-1"></a>            <span class="st">'stars'</span>: stars</span>
+<span id="cb68-42"><a href="#cb68-42" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb68-43"><a href="#cb68-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-44"><a href="#cb68-44" aria-hidden="true" tabindex="-1"></a><span class="co"># pretty print the resulting data we collected</span></span>
+<span id="cb68-45"><a href="#cb68-45" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(repo_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="question-5" class="level4">
+<h4 class="anchored" data-anchor-id="question-5">Question #5</h4>
+<p>What type/format of output comes out of a call to <code>requests.get(URL).text</code></p>
+<ul>
+<li><ol type="A">
+<li>CSV</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>HTML</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>JSON</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>API</li>
+</ol></li>
+<li><ol start="5" type="A">
+<li>I’m super lost</li>
+</ol></li>
+</ul>
+</section>
+</section>
+<section id="application-program-interface-apis" class="level2">
+<h2 class="anchored" data-anchor-id="application-program-interface-apis">Application Program Interface (APIs)</h2>
+<p>Client-Server APIs are basically a way for your software to talk to someone elses software. The client-server part means that there is a central resource (server) that is being used by many other pieces of software (clients).</p>
+<p>An API is well documented, telling you what kinds of data you can obtain (or submit!) and how to form your requests. That means you should always RTFM (and you should look up that term if you don’t know what it means).</p>
+<p>APIs are often (but not always) via HTTP. These web based APIs for client-server applications are known as Representational State Transfer APIs aka REST APIs. These RESTful APIs utilize standard HTTP methods (verbs) to perform operations on resources:</p>
+<ul>
+<li>GET: Retrieves a resource or a collection of resources.</li>
+<li>POST: Creates a new resource.</li>
+<li>PUT: Updates an existing resource (replaces the entire resource).</li>
+<li>PATCH: Partially updates an existing resource.</li>
+<li>DELETE: Removes a resource.</li>
+</ul>
+<p>The <code>requests</code> library we mentioned earlier implements RESTful interfaces. For instance you can get data from an API</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(<span class="st">'https://api.github.com/events'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>or post data to a webpage</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.post(<span class="st">'https://httpbin.org/post'</span>, data<span class="op">=</span>{<span class="st">'key'</span>: <span class="st">'value'</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Notes on APIs: - Make sure to read the API docs and understand the guidelines! - These guidelines typically specify the number / rate / size of requests. If you break those guidelines you may be banned from the API.</p>
+<section id="github-api" class="level4">
+<h4 class="anchored" data-anchor-id="github-api">Github API</h4>
+<p>One example of a REST API you can access is GitHub. The software we use to setup the project repos for all 800 or so of you in this class uses this API.</p>
+<p>https://api.github.com/</p>
+<p>its documentation is here</p>
+<p>https://docs.github.com/en/rest?apiVersion=2022-11-28</p>
+<p>For example, the following URL will give you data about whatever username you place at the end of the request.</p>
+<p>https://api.github.com/users/some_user_name</p>
+<p>In the cell below you can see an example of sucking in data from GitHub API and spitting it out in a Pandas dataframe</p>
+<div id="cell-104" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime, timedelta</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> time <span class="im">import</span> sleep</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>commit_list <span class="op">=</span> []</span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a><span class="co"># GitHub username</span></span>
+<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a>username <span class="op">=</span> <span class="st">"jasongfleischer"</span></span>
+<span id="cb71-8"><a href="#cb71-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-9"><a href="#cb71-9" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {}</span>
+<span id="cb71-10"><a href="#cb71-10" aria-hidden="true" tabindex="-1"></a><span class="co"># optional: GitHub token for authentication allows you to access </span></span>
+<span id="cb71-11"><a href="#cb71-11" aria-hidden="true" tabindex="-1"></a><span class="co"># private repos and also make more requests/minute than without a token</span></span>
+<span id="cb71-12"><a href="#cb71-12" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb71-13"><a href="#cb71-13" aria-hidden="true" tabindex="-1"></a><span class="co"># if you want to see how to get a token for Github API you can</span></span>
+<span id="cb71-14"><a href="#cb71-14" aria-hidden="true" tabindex="-1"></a><span class="co"># simply search or ask an AI "how to make a token for github API access"</span></span>
+<span id="cb71-15"><a href="#cb71-15" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb71-16"><a href="#cb71-16" aria-hidden="true" tabindex="-1"></a><span class="co"># to use a token uncomment the lines below and copy/paste your token </span></span>
+<span id="cb71-17"><a href="#cb71-17" aria-hidden="true" tabindex="-1"></a><span class="co"># token = "your github token here"</span></span>
+<span id="cb71-18"><a href="#cb71-18" aria-hidden="true" tabindex="-1"></a><span class="co"># headers = {    "Authorization": f"token {token}"}</span></span>
+<span id="cb71-19"><a href="#cb71-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-20"><a href="#cb71-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate date one year ago</span></span>
+<span id="cb71-21"><a href="#cb71-21" aria-hidden="true" tabindex="-1"></a>one_year_ago <span class="op">=</span> (datetime.utcnow() <span class="op">-</span> timedelta(days<span class="op">=</span><span class="dv">365</span>)).isoformat() <span class="op">+</span> <span class="st">"Z"</span></span>
+<span id="cb71-22"><a href="#cb71-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-23"><a href="#cb71-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Get user's repositories</span></span>
+<span id="cb71-24"><a href="#cb71-24" aria-hidden="true" tabindex="-1"></a>repos_url <span class="op">=</span> <span class="ss">f"https://api.github.com/users/</span><span class="sc">{</span>username<span class="sc">}</span><span class="ss">/repos"</span></span>
+<span id="cb71-25"><a href="#cb71-25" aria-hidden="true" tabindex="-1"></a>repos_response <span class="op">=</span> requests.get(repos_url, headers<span class="op">=</span>headers)</span>
+<span id="cb71-26"><a href="#cb71-26" aria-hidden="true" tabindex="-1"></a>repos <span class="op">=</span> repos_response.json()</span>
+<span id="cb71-27"><a href="#cb71-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-28"><a href="#cb71-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Get commits from the last year</span></span>
+<span id="cb71-29"><a href="#cb71-29" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> repo <span class="kw">in</span> repos:</span>
+<span id="cb71-30"><a href="#cb71-30" aria-hidden="true" tabindex="-1"></a>    repo_name <span class="op">=</span> repo[<span class="st">'name'</span>]</span>
+<span id="cb71-31"><a href="#cb71-31" aria-hidden="true" tabindex="-1"></a>    commits_url <span class="op">=</span> <span class="ss">f"https://api.github.com/repos/</span><span class="sc">{</span>username<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>repo_name<span class="sc">}</span><span class="ss">/commits"</span></span>
+<span id="cb71-32"><a href="#cb71-32" aria-hidden="true" tabindex="-1"></a>    params <span class="op">=</span> {</span>
+<span id="cb71-33"><a href="#cb71-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">"since"</span>: one_year_ago,</span>
+<span id="cb71-34"><a href="#cb71-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">"author"</span>: username  <span class="co"># Filter commits authored by the user</span></span>
+<span id="cb71-35"><a href="#cb71-35" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb71-36"><a href="#cb71-36" aria-hidden="true" tabindex="-1"></a>    commits_response <span class="op">=</span> requests.get(commits_url, headers<span class="op">=</span>headers, params<span class="op">=</span>params)</span>
+<span id="cb71-37"><a href="#cb71-37" aria-hidden="true" tabindex="-1"></a>    commits <span class="op">=</span> commits_response.json()</span>
+<span id="cb71-38"><a href="#cb71-38" aria-hidden="true" tabindex="-1"></a>    sleep(<span class="fl">0.5</span>) <span class="co"># pause for half a second between requests to prevent exceeding the API rate</span></span>
+<span id="cb71-39"><a href="#cb71-39" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb71-40"><a href="#cb71-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> commit <span class="kw">in</span> commits:</span>
+<span id="cb71-41"><a href="#cb71-41" aria-hidden="true" tabindex="-1"></a>        sha <span class="op">=</span> commit[<span class="st">'sha'</span>]</span>
+<span id="cb71-42"><a href="#cb71-42" aria-hidden="true" tabindex="-1"></a>        message <span class="op">=</span> commit[<span class="st">'commit'</span>][<span class="st">'message'</span>]</span>
+<span id="cb71-43"><a href="#cb71-43" aria-hidden="true" tabindex="-1"></a>        date <span class="op">=</span> commit[<span class="st">'commit'</span>][<span class="st">'author'</span>][<span class="st">'date'</span>]</span>
+<span id="cb71-44"><a href="#cb71-44" aria-hidden="true" tabindex="-1"></a>        commit_list.append( {<span class="st">'repo'</span>: repo_name, <span class="st">'hash'</span>:sha, <span class="st">'timestamp'</span>:date, <span class="st">'message'</span>:message} )</span>
+<span id="cb71-45"><a href="#cb71-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-46"><a href="#cb71-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-47"><a href="#cb71-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: create a DataFrame of the users commits</span></span>
+<span id="cb71-48"><a href="#cb71-48" aria-hidden="true" tabindex="-1"></a>commit_df <span class="op">=</span> pd.DataFrame(commit_list)</span>
+<span id="cb71-49"><a href="#cb71-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-50"><a href="#cb71-50" aria-hidden="true" tabindex="-1"></a>commit_df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="question-6" class="level4">
+<h4 class="anchored" data-anchor-id="question-6">Question #6</h4>
+<p>Take a look at what’s inside the variable <code>commits_response</code> that was created in the cell above. What type/format of output is it?</p>
+<ul>
+<li><ol type="A">
+<li>CSV</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>HTML</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>JSON</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>API</li>
+</ol></li>
+<li><ol start="5" type="A">
+<li>I’m super lost</li>
+</ol></li>
+</ul>
+</section>
+<section id="authorization-for-an-api" class="level4">
+<h4 class="anchored" data-anchor-id="authorization-for-an-api">Authorization for an API</h4>
+<p>APIs often require some way to show who is using the API. That allows the API to have some method of making sure that people only see data they should. It also allows the API to track the data usage better.</p>
+<p>Even APIs that do not <em>require</em> authorization (like GitHub) work better/faster/longer when you use them with an authorization. If you run the GitHub request cell above too much GitHub will stop serving you data because this is non-authorized. But look at the code above… there’s a commented out version of the variable <code>headers</code> where you could provide an authorization token… and if you do that your GitHub access will be restored even after you runout of non-authorized data.</p>
+<p>Many APIs use the Open Authorization (OAuth) protocol. This is a token based system. You ask for a token from the server, and then use that token in future communication to show who is making the request and to verify that the requester is authorized to access the data. A token is a bit like a password, but it isn’t linked to a user per se, but usually to a piece of software.</p>
+<p>While OAuth tokens are NOT passwords, you should treat them as such. Do <strong>NOT</strong> hard code the token into your code. Essentially once you share your code with another person you are also giving them your password (a big no no!). Instead tokens can be stored in secret files that live only on your computer (not in the repo!) or inside shell environment variables.</p>
+<p>OAuth systems are used in both APIs which you might use via HTTP (like GitHub) and non-web based ones (like <code>gspread</code> for Google Sheets direct access). And of course there are other methods to authenticate that may be used too :)</p>
+<p>Here is a <a href="https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2">tutorial on OAuth</a></p>
+</section>
+</section>
+<section id="web-scraping-vs.-apis" class="level2">
+<h2 class="anchored" data-anchor-id="web-scraping-vs.-apis">Web Scraping vs.&nbsp;APIs</h2>
+<p>Web scraping and APIs are different approaches:</p>
+<ul>
+<li>APIs are an interface to interact with an application, designed for programmatic use
+<ul>
+<li>They allow systematic, controlled access</li>
+<li>They typically return structured (friendly) data</li>
+<li>If you access via API following any rate limit rules you will not be blocked</li>
+</ul></li>
+<li>Web scraping (typically) involves having your bot navigate a site systematically, collecting and processing the webpage data
+<ul>
+<li>This can be hard to systematize, being dependent on the idiosyncracies of a web page, at the time you request it</li>
+<li>This typically returns relatively unstructured data</li>
+<li>Worse, the webpage tags can and will change over time. You’ll have to redo your webscraping code from time to time</li>
+<li>Much more wrangling of the data</li>
+<li>If the site notices you’re scraping you will be blocked</li>
+</ul></li>
+</ul>
+<p>If you’d like to see more about API usage to get data, here is the documentation for GitHub’s API as an example https://docs.github.com/en/rest?apiVersion=2022-11-28</p>
+<p>Below is an example of using the GitHub API and storing outputs in a Pandas DataFrame</p>
+</section>
+<section id="where-to-find-data" class="level2">
+<h2 class="anchored" data-anchor-id="where-to-find-data">Where to Find Data?</h2>
+<p>There are of course MANY more data sources… if you want to add your favorite you can make a pull request on this file :)</p>
+<p>ALSO there are soooooo many data download sources and so many lists of data download sources…. do NOT get stuck just looking at Kaggle! search for these!</p>
+<ul>
+<li><a href="https://github.com/awesomedata/awesome-public-datasets/blob/master/README.rst">Awesome Public Datasets</a></li>
+<li><a href="https://catalog.data.gov/dataset">Data.gov</a></li>
+<li><a href="https://docs.google.com/spreadsheets/d/1wZhPLMCHKJvwOkP4juclhjFgqIY8fQFMemwKL2c64vk/edit#gid=0">Data Is Plural</a></li>
+<li><a href="https://ucsd.libguides.com/data-statistics/home">UCSD Datasets</a></li>
+<li><a href="http://deeplearning.net/datasets/">Datasets | Deep Learning</a></li>
+<li><a href="https://data.stanford.edu/">Stanford | Social Science Data Collection</a></li>
+<li><a href="https://evictionlab.org/get-the-data/">Eviction Lab (email required)</a></li>
+<li><a href="https://data.sandiego.gov/">San Diego Data</a></li>
+<li><a href="https://www.census.gov/">US Census</a></li>
+<li><a href="http://openclimatedata.net/">Open Climate Data</a></li>
+<li><a href="https://dasl.datadescription.com/datafiles/">Data and Story Library</a></li>
+<li><a href="http://extrasensory.ucsd.edu/">UCSD behavioral mobile data</a></li>
+<li><a href="https://www.kaggle.com/">Kaggle</a></li>
+<li><a href="https://data.fivethirtyeight.com/">FiveThirtyEight</a></li>
+<li><a href="https://data.world/">data.world</a></li>
+<li><a href="http://www.rdatamining.com/resources/data">Free Datasets - R and Data Mining</a></li>
+<li><a href="https://blog.thedataincubator.com/2014/10/data-sources-for-cool-data-science-projects-part-1/">Data Sources for Cool Data Science Projects</a></li>
+</ul>
+</section>
+<section id="notes-on-working-with-data" class="level2">
+<h2 class="anchored" data-anchor-id="notes-on-working-with-data">Notes on Working with Data</h2>
+<section id="data-science-is-ad-hoc" class="level3">
+<h3 class="anchored" data-anchor-id="data-science-is-ad-hoc">Data Science is Ad-Hoc</h3>
+<ul>
+<li>It is part of the job description to put things together that were not designed to go together.</li>
+<li>We do not have universal solutions, but haphazard, idiosyncratic systems, for data collection, storage and analysis.</li>
+<li>Data is everywhere. But relatively little of it was collected <em>as data</em>.</li>
+</ul>
+</section>
+<section id="data-collection-curation-and-storage-are-difficult" class="level3">
+<h3 class="anchored" data-anchor-id="data-collection-curation-and-storage-are-difficult">Data Collection, Curation, and Storage are Difficult</h3>
+<ul>
+<li>It can be difficult to choose broadly useful standards</li>
+<li>Take time to think about your data, and how you will load, store, organize and save it</li>
+</ul>
+</section>
+<section id="data-is-inherently-noisy" class="level3">
+<h3 class="anchored" data-anchor-id="data-is-inherently-noisy">Data is Inherently Noisy</h3>
+<ul>
+<li>We live in a messy, noisy, world, with messy, noisy, people, using messy, noisy instruments.</li>
+<li>There is no perfect data.
+<ul>
+<li>There is better / or worse data, given the context.</li>
+</ul></li>
+</ul>
+</section>
+<section id="different-objectives" class="level3">
+<h3 class="anchored" data-anchor-id="different-objectives">Different Objectives</h3>
+<ul>
+<li>Humans and computers are different.</li>
+<li>We interact with ‘<em>data</em>’ in different ways.</li>
+<li>This underlies many aspects of data wrangling
+<ul>
+<li>The ‘friendliness’ of data types / files</li>
+<li>The difference between web scraping and APIs</li>
+<li>A disconnect between data in the real world, and data we want to use</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="so-what-to-do" class="level2">
+<h2 class="anchored" data-anchor-id="so-what-to-do">So… What to do?</h2>
+<ul>
+<li>Think about how your data are stored &amp; its structure?</li>
+<li>Look at your data before you anayze it
+<ul>
+<li>are there missing values?</li>
+<li>outlier values?</li>
+</ul></li>
+<li>Are your data trustworthy?
+<ul>
+<li>source?</li>
+<li>how was it generated?</li>
+</ul></li>
+</ul>
+</section>
+<section id="specific-recommendations" class="level2">
+<h2 class="anchored" data-anchor-id="specific-recommendations">Specific Recommendations</h2>
+<ul>
+<li>Prioritize using well structured, common, open file types
+<ul>
+<li>Take advantage of existing tools to deal with these files (numpy, pandas, etc.)</li>
+</ul></li>
+<li>Look into, and then follow, common conventions
+<ul>
+<li>Minimize custom objects, workflows and data files</li>
+</ul></li>
+<li>Look for APIs. Ask if they are available.
+<ul>
+<li>Acknowledge that web scraping and/or wrangling unstructured data are complex / long tasks</li>
+</ul></li>
+<li>Think about data flow from the beginning. Organize your data pipeline, consider the ‘wrangling’ aspects throughout
+<ul>
+<li>Set yourself up with well organized, labelled approach to your data</li>
+<li>Think about when and how you might want/need to save out intermediate results.</li>
+</ul></li>
+</ul>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
