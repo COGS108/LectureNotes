@@ -30,7 +30,7 @@
           <br>
           <span style="margin-left: 10ch;">
             <a class="pdf-read-button"
-               href="{{ event.slides }}"
+               href="{% if event.slides contains '://' %}{{ event.slides }}{% else %}{{ site.baseurl }}{{ event.slides }}{% endif %}"
                target="_blank"
                rel="noopener noreferrer">
               Read
@@ -151,7 +151,7 @@
           {% if event.slides %}
           <span style="margin-left: 0.5ch;">
             <a class="pdf-read-button"
-               href="{{ event.slides }}"
+               href="{% if event.slides contains '://' %}{{ event.slides }}{% else %}{{ site.baseurl }}{{ event.slides }}{% endif %}"
                target="_blank"
                rel="noopener noreferrer">
               Read
