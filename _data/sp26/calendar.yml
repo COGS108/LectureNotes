@@ -7,7 +7,7 @@
         - label: LEC
           type: lecture
           title: Welcome!
-          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/00-Welcome.pdf
+          slides: /assets/slides/sp26/00-Welcome.pdf
 
     - date: "2026-04-01"
       in_class: true
@@ -15,7 +15,7 @@
         - label: LEC
           type: lecture
           title: Version Control I
-          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/01-VersionControl.pdf
+          slides: /assets/slides/sp26/01-VersionControl.pdf
         - label: DISC
           type: disc
           title: Python review (nothing to turn in)
@@ -26,7 +26,7 @@
         - label: LEC
           type: lecture
           title: Version Control II
-          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/02-MoreVersionControl.pdf
+          slides: /assets/slides/sp26/02-MoreVersionControl.pdf
         - label: DISC
           type: disc
           title: Python review (nothing to turn in)
@@ -40,7 +40,7 @@
         - label: LEC
           type: lecture
           title: Data & Intuition I
-          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/03-Data.pdf
+          slides: /assets/slides/sp26/03-Data.pdf
 
     - date: "2026-04-08"
       in_class: true
@@ -48,7 +48,7 @@
         - label: LEC
           type: lecture
           title: Data & Intuition II
-          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/04-Intuition.pdf
+          slides: /assets/slides/sp26/04-Intuition.pdf
         - label: DUE
           type: hw
           title: "<b>Practice assignment due</b>"
@@ -82,7 +82,7 @@
         - label: LEC
           type: lecture
           title: Ethics
-          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/06-Ethics.pdf
+          slides: /assets/slides/sp26/06-Ethics.pdf
 
     - date: "2026-04-15"
       in_class: true
@@ -90,7 +90,7 @@
         - label: LEC
           type: lecture
           title: Data Science questions
-          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/07-Questions.pdf
+          slides: /assets/slides/sp26/07-Questions.pdf
         - label: DUE
           type: hw
           title: "<b>GitHub ID due</b>"
@@ -124,7 +124,7 @@
         - label: LEC
           type: lecture
           title: Exploratory Data Analysis
-          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/09-Analysis.pdf
+          slides: /assets/slides/sp26/09-Analysis.pdf
 
     - date: "2026-04-22"
       in_class: true
@@ -132,7 +132,7 @@
         - label: LEC
           type: lecture
           title: Geospatial
-          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/10-EDA.pdf
+          slides: /assets/slides/sp26/10-EDA.pdf
         - label: DUE
           type: hw
           title: "<b>A1 due</b>"
@@ -149,7 +149,7 @@
         - label: LEC
           type: lecture
           title: Inference I
-          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/11-Inference1.pdf
+          slides: /assets/slides/sp26/11-Inference1.pdf
         - label: DUE
           type: hw
           title: "<b>D3 due</b>"
@@ -166,7 +166,7 @@
         - label: LEC
           type: lecture
           title: Inference II
-          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/12-Inference2.pdf
+          slides: /assets/slides/sp26/12-Inference2.pdf
 
     - date: "2026-04-29"
       in_class: true
@@ -174,7 +174,7 @@
         - label: LEC
           type: lecture
           title: Non parametric inference
-          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/13-Nonparametric-Inference.pdf
+          slides: /assets/slides/sp26/13-Nonparametric-Inference.pdf
         - label: DUE
           type: hw
           title: "<b>Project Proposal due</b>"
@@ -188,7 +188,7 @@
         - label: LEC
           type: lecture
           title: Linear models I
-          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/14-Models.pdf
+          slides: /assets/slides/sp26/14-Models.pdf
         - label: DUE
           type: hw
           title: "<b>D4 due</b>"
@@ -213,7 +213,7 @@
         - label: LEC
           type: lecture
           title: Dimensionality Reduction
-          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/16-Dimensionality-Reduction.pdf
+          slides: /assets/slides/sp26/16-Dimensionality-Reduction.pdf
         - label: DUE
           type: hw
           title: "<b>A2 due</b>"
@@ -227,7 +227,7 @@
         - label: LEC
           type: lecture
           title: Machine Learning I
-          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/17-Machine-Learning.pdf
+          slides: /assets/slides/sp26/17-Machine-Learning.pdf
         - label: DUE
           type: hw
           title: "<b>D5 due</b>"
@@ -244,7 +244,7 @@
         - label: LEC
           type: lecture
           title: Machine Learning II
-          slides: https://raw.githubusercontent.com/COGS108/Lectures-Sp26/main/18-Measuring-Machine-Learning.pdf
+          slides: /assets/slides/sp26/18-Measuring-Machine-Learning.pdf
 
     - date: "2026-05-13"
       in_class: true
