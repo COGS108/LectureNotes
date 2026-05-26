@@ -27,10 +27,11 @@
         {% when "lecture" %}
         <small>
           {% if event.slides %}
+          {% assign slide_url = event.slides | replace: 'https://mozilla.github.io/pdf.js/web/viewer.html?file=', '' %}
           <br>
           <span style="margin-left: 10ch;">
             <a class="pdf-read-button"
-               href="{{ event.slides }}"
+               href="{{ slide_url }}"
                target="_blank"
                rel="noopener noreferrer">
               Read
@@ -149,9 +150,10 @@
           {% endif %}
 
           {% if event.slides %}
+          {% assign slide_url = event.slides | replace: 'https://mozilla.github.io/pdf.js/web/viewer.html?file=', '' %}
           <span style="margin-left: 0.5ch;">
             <a class="pdf-read-button"
-               href="{{ event.slides }}"
+               href="{{ slide_url }}"
                target="_blank"
                rel="noopener noreferrer">
               Read
