@@ -85,6 +85,7 @@ exclude:
 
 include:
   - assets/notebookLectures
+  
 # Aux link for the upper right navigation
 aux_links:
   # "Template Repository": "https://www.github.com/kshannon/ucsd-dsc40a"

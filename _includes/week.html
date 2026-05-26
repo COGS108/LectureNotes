@@ -31,7 +31,7 @@
           <br>
           <span style="margin-left: 10ch;">
             <a class="pdf-read-button"
-               href="{{ slide_url }}"
+               href="{% if event.slides contains '://' %}{{ event.slides }}{% else %}{{ site.baseurl }}{{ event.slides }}{% endif %}"
                target="_blank"
                rel="noopener noreferrer">
               Read
@@ -153,7 +153,7 @@
           {% assign slide_url = event.slides | replace: 'https://mozilla.github.io/pdf.js/web/viewer.html?file=', '' %}
           <span style="margin-left: 0.5ch;">
             <a class="pdf-read-button"
-               href="{{ slide_url }}"
+               href="{% if event.slides contains '://' %}{{ event.slides }}{% else %}{{ site.baseurl }}{{ event.slides }}{% endif %}"
                target="_blank"
                rel="noopener noreferrer">
               Read
