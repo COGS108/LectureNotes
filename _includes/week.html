@@ -39,6 +39,17 @@
           </span>
           {% endif %}
 
+          {% if event.notes %}
+          <span style="margin-left: 0.5ch;">
+            <a class="pdf-read-button"
+                href="{{ event.notes }}"
+                target="_blank"
+                rel="noopener noreferrer">
+              Notes
+            </a>
+          </span>
+          {% endif %}
+
           {% if event.blank %}
           <br>
           <span style="margin-left: 10ch;">

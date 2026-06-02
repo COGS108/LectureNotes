@@ -206,6 +206,7 @@
           type: lecture
           title: Linear models II
           slides: /assets/notebookLectures/15-Inference-and-models.html
+          notes: /assets/condensedNotes/models.html
 
     - date: "2026-05-06"
       in_class: true
